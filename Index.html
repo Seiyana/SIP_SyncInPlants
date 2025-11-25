@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soil Moisture Monitor</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <!-- Hamburger Menu -->
+    <div id="menuOverlay" class="menu-overlay">
+        <div class="menu-content">
+            <button class="close-menu" onclick="closeMenu()">✕</button>
+            <nav class="menu-nav">
+                <a href="#" onclick="showPage('dashboard')">
+                    <span class="menu-icon">📊</span>
+                    Dashboard
+                </a>
+                <a href="#" onclick="showPage('settings')">
+                    <span class="menu-icon">⚙️</span>
+                    Settings
+                </a>
+                <a href="#" onclick="showPage('about')">
+                    <span class="menu-icon">ℹ️</span>
+                    About
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <button class="hamburger" onclick="openMenu()" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <h1>🌱 Soil Moisture Monitor</h1>
+        <div class="connection-status" id="connectionStatus">
+            <span class="status-dot"></span>
+            <span id="statusText">Connecting...</span>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main id="mainContent">
+        
+        <!-- Dashboard Page -->
+        <div id="dashboardPage" class="page active">
+            <div class="container">
+                
+                <!-- Current Reading Card -->
+                <div class="card highlight-card">
+                    <div class="card-header">
+                        <h2>Current Reading</h2>
+                        <span class="last-update" id="lastUpdate">--</span>
+                    </div>
+                    <div class="current-value-container">
+                        <div class="current-value" id="currentValue">
+                            <span class="value">--</span>
+                            <span class="unit">ADC</span>
+                        </div>
+                        <div class="moisture-indicator" id="moistureIndicator">
+                            <div class="indicator-bar">
+                                <div class="indicator-fill" id="indicatorFill"></div>
+                            </div>
+                            <div class="indicator-labels">
+                                <span>Dry</span>
+                                <span>Wet</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistics Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">24h Average</div>
+                        <div class="stat-value" id="avgValue">--</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">24h High</div>
+                        <div class="stat-value" id="maxValue">--</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">24h Low</div>
+                        <div class="stat-value" id="minValue">--</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Readings</div>
+                        <div class="stat-value" id="totalReadings">--</div>
+                    </div>
+                </div>
+
+                <!-- Chart Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Historical Data</h2>
+                        <div class="chart-controls">
+                            <select id="timeRange" onchange="changeTimeRange()">
+                                <option value="1">Last Hour</option>
+                                <option value="6">Last 6 Hours</option>
+                                <option value="24" selected>Last 24 Hours</option>
+                                <option value="168">Last 7 Days</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="moistureChart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Settings Page -->
+        <div id="settingsPage" class="page">
+            <div class="container">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Settings</h2>
+                    </div>
+                    <div class="settings-content">
+                        
+                        <div class="setting-group">
+                            <label for="refreshInterval">
+                                <strong>Chart Refresh Rate</strong>
+                                <p class="setting-description">How often the chart updates with new data</p>
+                            </label>
+                            <select id="refreshInterval" onchange="updateSettings()">
+                                <option value="1000">Real-time (1s)</option>
+                                <option value="5000" selected>Every 5 seconds</option>
+                                <option value="10000">Every 10 seconds</option>
+                                <option value="30000">Every 30 seconds</option>
+                                <option value="60000">Every minute</option>
+                            </select>
+                        </div>
+
+                        <div class="setting-group">
+                            <label for="themeToggle">
+                                <strong>Theme</strong>
+                                <p class="setting-description">Choose your preferred color scheme</p>
+                            </label>
+                            <select id="themeToggle" onchange="toggleTheme()">
+                                <option value="light">Light Mode</option>
+                                <option value="dark">Dark Mode</option>
+                                <option value="auto">Auto (System)</option>
+                            </select>
+                        </div>
+
+                        <div class="setting-group">
+                            <label for="maxDataPoints">
+                                <strong>Chart Data Points</strong>
+                                <p class="setting-description">Maximum number of points to display</p>
+                            </label>
+                            <select id="maxDataPoints" onchange="updateSettings()">
+                                <option value="50">50 points</option>
+                                <option value="100" selected>100 points</option>
+                                <option value="200">200 points</option>
+                                <option value="500">500 points</option>
+                            </select>
+                        </div>
+
+                        <div class="setting-group">
+                            <label>
+                                <strong>Notifications</strong>
+                                <p class="setting-description">Get alerts for extreme values (coming soon)</p>
+                            </label>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="notificationsEnabled" disabled>
+                                <label for="notificationsEnabled" class="toggle-label">
+                                    <span class="toggle-inner"></span>
+                                    <span class="toggle-switch-slider"></span>
+                                </label>
+                                <span class="toggle-text">Coming Soon</span>
+                            </div>
+                        </div>
+
+                        <button class="btn-secondary" onclick="resetSettings()">Reset to Defaults</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- About Page -->
+        <div id="aboutPage" class="page">
+            <div class="container">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>About</h2>
+                    </div>
+                    <div class="about-content">
+                        <div class="about-section">
+                            <h3>🌱 Soil Moisture Monitoring System</h3>
+                            <p>
+                                A complete IoT solution for monitoring soil moisture levels in real-time. 
+                                This system uses an ESP32 microcontroller with a capacitive moisture sensor 
+                                to collect data and send it to the cloud for analysis and visualization.
+                            </p>
+                        </div>
+
+                        <div class="about-section">
+                            <h3>🔧 System Components</h3>
+                            <ul>
+                                <li><strong>ESP32 Microcontroller</strong> - Reads sensor data and transmits to cloud</li>
+                                <li><strong>Capacitive Soil Moisture Sensor</strong> - Measures soil moisture levels</li>
+                                <li><strong>Supabase Backend</strong> - Real-time database and API</li>
+                                <li><strong>Web Dashboard</strong> - Live monitoring and historical analysis</li>
+                            </ul>
+                        </div>
+
+                        <div class="about-section">
+                            <h3>📊 Features</h3>
+                            <ul>
+                                <li>Real-time moisture monitoring with live updates</li>
+                                <li>Historical data visualization with interactive charts</li>
+                                <li>24-hour statistics and trend analysis</li>
+                                <li>Easy WiFi setup through captive portal</li>
+                                <li>Responsive design for mobile and desktop</li>
+                                <li>Customizable refresh rates and display options</li>
+                            </ul>
+                        </div>
+
+                        <div class="about-section">
+                            <h3>💡 How It Works</h3>
+                            <ol>
+                                <li>ESP32 reads moisture sensor every 5 seconds</li>
+                                <li>Data is sent to Supabase via REST API</li>
+                                <li>Supabase broadcasts updates to connected clients</li>
+                                <li>Web dashboard receives and visualizes data in real-time</li>
+                            </ol>
+                        </div>
+
+                        <div class="about-section">
+                            <h3>🔗 Technology Stack</h3>
+                            <div class="tech-stack">
+                                <span class="tech-badge">ESP32</span>
+                                <span class="tech-badge">Arduino</span>
+                                <span class="tech-badge">Supabase</span>
+                                <span class="tech-badge">PostgreSQL</span>
+                                <span class="tech-badge">JavaScript</span>
+                                <span class="tech-badge">Chart.js</span>
+                                <span class="tech-badge">HTML5</span>
+                                <span class="tech-badge">CSS3</span>
+                            </div>
+                        </div>
+
+                        <div class="about-section">
+                            <h3>📝 Version Information</h3>
+                            <p>
+                                <strong>Version:</strong> 1.0.0<br>
+                                <strong>Last Updated:</strong> November 2024<br>
+                                <strong>Status:</strong> Production Ready
+                            </p>
+                        </div>
+
+                        <div class="about-section">
+                            <h3>🛠️ Setup Instructions</h3>
+                            <ol>
+                                <li>Flash the ESP32 with the provided firmware</li>
+                                <li>Connect to "SoilMonitor_Setup" WiFi network</li>
+                                <li>Configure your WiFi credentials at 192.168.4.1</li>
+                                <li>Deploy this web app to your hosting platform</li>
+                                <li>Update config.js with your Supabase credentials</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
