@@ -15,18 +15,45 @@
             <button class="close-menu" onclick="closeMenu()">✕</button>
             <nav class="menu-nav">
                 <a href="#" onclick="showPage('dashboard')">
-                    <span class="menu-icon"></span>
+                    <span class="menu-icon">📊</span>
                     Dashboard
                 </a>
                 <a href="#" onclick="showPage('settings')">
-                    <span class="menu-icon"></span>
+                    <span class="menu-icon">⚙️</span>
                     Settings
                 </a>
+                <a href="#" onclick="showPage('setup')">
+                    <span class="menu-icon">🔧</span>
+                    Setup Instructions
+                </a>
                 <a href="#" onclick="showPage('about')">
-                    <span class="menu-icon"></span>
+                    <span class="menu-icon">ℹ️</span>
                     About
                 </a>
             </nav>
+        </div>
+    </div>
+
+    <!-- Plant Selection Panel -->
+    <div id="plantPanel" class="plant-panel">
+        <div class="panel-content">
+            <div class="panel-header">
+                <h2>Select Your Plant</h2>
+                <button class="close-panel" onclick="closePlantPanel()">✕</button>
+            </div>
+            
+            <div class="panel-filters">
+                <select id="plantFilter" onchange="filterPlants()">
+                    <option value="all">All Plants</option>
+                    <option value="az">A-Z</option>
+                    <option value="rarity">By Rarity</option>
+                    <option value="moisture">By Moisture Level</option>
+                </select>
+            </div>
+
+            <div class="plants-grid" id="plantsGrid">
+                <!-- Plants will be populated by JavaScript -->
+            </div>
         </div>
     </div>
 
@@ -52,7 +79,7 @@
             <div class="container">
                 
                 <!-- Current Reading Card -->
-                <div class="card highlight-card">
+                <div class="card highlight-card" id="currentReadingCard">
                     <div class="card-header">
                         <h2>Current Reading</h2>
                         <span class="last-update" id="lastUpdate">--</span>
@@ -60,7 +87,7 @@
                     <div class="current-value-container">
                         <div class="current-value" id="currentValue">
                             <span class="value">--</span>
-                            <span class="unit">ADC</span>
+                            <span class="unit">%</span>
                         </div>
                         <div class="moisture-indicator" id="moistureIndicator">
                             <div class="indicator-bar">
@@ -71,26 +98,24 @@
                                 <span>Wet</span>
                             </div>
                         </div>
+                        <div class="plant-info" id="plantInfo">
+                            <p class="plant-name" id="plantName"></p>
+                            <p class="plant-threshold" id="plantThreshold"></p>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Statistics Cards -->
+                <!-- Action Cards -->
                 <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-label">24h Average</div>
-                        <div class="stat-value" id="avgValue">--</div>
+                    <div class="action-card" onclick="openPlantPanel()">
+                        <div class="action-icon">🌱</div>
+                        <div class="action-label">Select Plant</div>
+                        <div class="action-description">Choose your plant type</div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-label">24h High</div>
-                        <div class="stat-value" id="maxValue">--</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">24h Low</div>
-                        <div class="stat-value" id="minValue">--</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Total Readings</div>
-                        <div class="stat-value" id="totalReadings">--</div>
+                    <div class="action-card coming-soon">
+                        <div class="action-icon">➕</div>
+                        <div class="action-label">Add Sensor</div>
+                        <div class="action-description">Coming Soon</div>
                     </div>
                 </div>
 
@@ -125,20 +150,6 @@
                     <div class="settings-content">
                         
                         <div class="setting-group">
-                            <label for="refreshInterval">
-                                <strong>Chart Refresh Rate</strong>
-                                <p class="setting-description">How often the chart updates with new data</p>
-                            </label>
-                            <select id="refreshInterval" onchange="updateSettings()">
-                                <option value="1000">Real-time (1s)</option>
-                                <option value="5000" selected>Every 5 seconds</option>
-                                <option value="10000">Every 10 seconds</option>
-                                <option value="30000">Every 30 seconds</option>
-                                <option value="60000">Every minute</option>
-                            </select>
-                        </div>
-
-                        <div class="setting-group">
                             <label for="themeToggle">
                                 <strong>Theme</strong>
                                 <p class="setting-description">Choose your preferred color scheme</p>
@@ -151,34 +162,60 @@
                         </div>
 
                         <div class="setting-group">
-                            <label for="maxDataPoints">
-                                <strong>Chart Data Points</strong>
-                                <p class="setting-description">Maximum number of points to display</p>
-                            </label>
-                            <select id="maxDataPoints" onchange="updateSettings()">
-                                <option value="50">50 points</option>
-                                <option value="100" selected>100 points</option>
-                                <option value="200">200 points</option>
-                                <option value="500">500 points</option>
-                            </select>
-                        </div>
-
-                        <div class="setting-group">
                             <label>
                                 <strong>Notifications</strong>
-                                <p class="setting-description">Get alerts for extreme values (coming soon)</p>
+                                <p class="setting-description">Get alerts when moisture reaches threshold</p>
                             </label>
                             <div class="toggle-switch">
-                                <input type="checkbox" id="notificationsEnabled" disabled>
+                                <input type="checkbox" id="notificationsEnabled" onchange="updateSettings()">
                                 <label for="notificationsEnabled" class="toggle-label">
                                     <span class="toggle-inner"></span>
                                     <span class="toggle-switch-slider"></span>
                                 </label>
-                                <span class="toggle-text">Coming Soon</span>
                             </div>
                         </div>
 
+                        <div class="setting-group">
+                            <label>
+                                <strong>Sensor Calibration</strong>
+                                <p class="setting-description">Calibrate your sensor for accurate readings</p>
+                            </label>
+                            <button class="btn-primary" onclick="startCalibration()">Start Calibration</button>
+                        </div>
+
                         <button class="btn-secondary" onclick="resetSettings()">Reset to Defaults</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Setup Instructions Page -->
+        <div id="setupPage" class="page">
+            <div class="container">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Setup Instructions</h2>
+                    </div>
+                    <div class="about-content">
+                        <div class="about-section">
+                            <h3>Hardware Setup</h3>
+                            <ol>
+                                <li>Flash the ESP32 with the provided firmware</li>
+                                <li>Connect to "SoilMonitor_Setup" WiFi network</li>
+                                <li>Configure your WiFi credentials at 192.168.4.1</li>
+                                <li>Insert the soil moisture sensor into your plant's soil</li>
+                            </ol>
+                        </div>
+
+                        <div class="about-section">
+                            <h3>Software Setup</h3>
+                            <ol>
+                                <li>Deploy this web app to your hosting platform</li>
+                                <li>Update script.js with your Supabase credentials</li>
+                                <li>Calibrate the sensor in Settings</li>
+                                <li>Select your plant type for accurate monitoring</li>
+                            </ol>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -216,55 +253,45 @@
                             <ul>
                                 <li>Real-time moisture monitoring with live updates</li>
                                 <li>Historical data visualization with interactive charts</li>
-                                <li>24-hour statistics and trend analysis</li>
-                                <li>Easy WiFi setup through captive portal</li>
+                                <li>Plant-specific monitoring with custom thresholds</li>
+                                <li>Sensor calibration for accurate readings</li>
+                                <li>Smart notifications when plants need attention</li>
                                 <li>Responsive design for mobile and desktop</li>
-                                <li>Customizable refresh rates and display options</li>
                             </ul>
                         </div>
 
                         <div class="about-section">
                             <h3>How It Works</h3>
                             <ol>
-                                <li>ESP32 reads moisture sensor every 5 seconds</li>
+                                <li>ESP32 reads moisture sensor every 3 seconds</li>
                                 <li>Data is sent to Supabase via REST API</li>
                                 <li>Supabase broadcasts updates to connected clients</li>
                                 <li>Web dashboard receives and visualizes data in real-time</li>
+                                <li>System checks thresholds and sends notifications</li>
                             </ol>
                         </div>
 
                         <div class="about-section">
                             <h3>🔗 Technology Stack</h3>
                             <div class="tech-stack">
-                                <span class="tech-badge">ESP32</span>
-                                <span class="tech-badge">Arduino</span>
-                                <span class="tech-badge">Supabase</span>
-                                <span class="tech-badge">PostgreSQL</span>
-                                <span class="tech-badge">JavaScript</span>
-                                <span class="tech-badge">Chart.js</span>
-                                <span class="tech-badge">HTML5</span>
-                                <span class="tech-badge">CSS3</span>
+                                <span class="tech-badge esp32">ESP32</span>
+                                <span class="tech-badge arduino">Arduino</span>
+                                <span class="tech-badge supabase">Supabase</span>
+                                <span class="tech-badge postgresql">PostgreSQL</span>
+                                <span class="tech-badge javascript">JavaScript</span>
+                                <span class="tech-badge chartjs">Chart.js</span>
+                                <span class="tech-badge html5">HTML5</span>
+                                <span class="tech-badge css3">CSS3</span>
                             </div>
                         </div>
 
                         <div class="about-section">
                             <h3>Version Information</h3>
                             <p>
-                                <strong>Version:</strong> 1.0.0<br>
+                                <strong>Version:</strong> 2.0.0<br>
                                 <strong>Last Updated:</strong> November 2024<br>
                                 <strong>Status:</strong> Production Ready
                             </p>
-                        </div>
-
-                        <div class="about-section">
-                            <h3>Setup Instructions</h3>
-                            <ol>
-                                <li>Flash the ESP32 with the provided firmware</li>
-                                <li>Connect to "SoilMonitor_Setup" WiFi network</li>
-                                <li>Configure your WiFi credentials at 192.168.4.1</li>
-                                <li>Deploy this web app to your hosting platform</li>
-                                <li>Update config.js with your Supabase credentials</li>
-                            </ol>
                         </div>
                     </div>
                 </div>
@@ -272,6 +299,32 @@
         </div>
 
     </main>
+
+    <!-- Calibration Modal -->
+    <div id="calibrationModal" class="modal">
+        <div class="modal-content">
+            <h2>Sensor Calibration</h2>
+            <div id="calibrationStep1" class="calibration-step active">
+                <p><strong>Step 1: Dry Calibration</strong></p>
+                <p>Remove the sensor from soil and completely dry it off with a cloth.</p>
+                <p>Current reading: <span id="dryReading">--</span></p>
+                <button class="btn-primary" onclick="calibrateDry()">Record Dry Value</button>
+            </div>
+            <div id="calibrationStep2" class="calibration-step">
+                <p><strong>Step 2: Wet Calibration</strong></p>
+                <p>Dip the sensor completely in water (up to the line).</p>
+                <p>Current reading: <span id="wetReading">--</span></p>
+                <button class="btn-primary" onclick="calibrateWet()">Record Wet Value</button>
+            </div>
+            <div id="calibrationStep3" class="calibration-step">
+                <p><strong>Calibration Complete!</strong></p>
+                <p>Dry value: <span id="finalDry">--</span></p>
+                <p>Wet value: <span id="finalWet">--</span></p>
+                <button class="btn-primary" onclick="closeCalibration()">Done</button>
+            </div>
+            <button class="btn-secondary" onclick="closeCalibration()">Cancel</button>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
