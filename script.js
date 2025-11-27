@@ -67,7 +67,10 @@ function updateSettings() {
 
 function resetSettings() {
     if (!confirm('Reset all settings to defaults?')) return;
+<<<<<<< HEAD
     
+=======
+>>>>>>> parent of dd6e02b (v5)
     settings = {
         theme: 'light',
         timeRange: 24,
@@ -102,8 +105,8 @@ function applyTheme() {
 
 function updateChartTheme() {
     const isDark = document.body.getAttribute('data-theme') === 'dark';
-    const textColor = isDark ? '#f0f5f4' : '#0a0f0e';
-    const gridColor = isDark ? 'rgba(240, 245, 244, 0.1)' : 'rgba(10, 15, 14, 0.1)';
+    const textColor = isDark ? '#e2e8f0' : '#4a5568';
+    const gridColor = isDark ? 'rgba(226, 232, 240, 0.1)' : 'rgba(0, 0, 0, 0.1)';
     chart.options.scales.x.ticks.color = textColor;
     chart.options.scales.y.ticks.color = textColor;
     chart.options.scales.x.grid.color = gridColor;
@@ -147,6 +150,7 @@ async function populatePlants() {
     const grid = document.getElementById('plantsGrid');
     if (!grid) return;
     
+<<<<<<< HEAD
     try {
         // Fetch both default and custom plants from Supabase
         const { data: defaultPlants, error: defaultError } = await supabase
@@ -220,6 +224,33 @@ async function populatePlants() {
         console.error('Error populating plants:', err);
         grid.innerHTML = `<p style="color: red; grid-column: 1/-1; text-align: center;">Error loading plants: ${err.message}</p>`;
     }
+=======
+    let plants = [...PLANTS_DATABASE];
+    const filter = document.getElementById('plantFilter')?.value || 'all';
+    
+    if (filter === 'az') plants.sort((a, b) => a.name.localeCompare(b.name));
+    else if (filter === 'rarity') {
+        const order = { Common: 1, Uncommon: 2, Rare: 3 };
+        plants.sort((a, b) => order[a.rarity] - order[b.rarity]);
+    } else if (filter === 'moisture') {
+        const order = { Low: 1, Medium: 2, High: 3 };
+        plants.sort((a, b) => order[a.moisture] - order[b.moisture]);
+    }
+    
+    grid.innerHTML = plants.map(p => `
+        <div class="plant-card" onclick="selectPlant(${JSON.stringify(p).replace(/"/g, '&quot;')})">
+            <img src="${p.image}" alt="${p.name}" onerror="this.src='https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=400'">
+            <div class="plant-card-info">
+                <h3>${p.name}</h3>
+                <div class="plant-badges">
+                    <span class="rarity-badge ${p.rarity.toLowerCase()}">${p.rarity}</span>
+                    <span class="moisture-badge">${p.moisture} Moisture</span>
+                </div>
+                <p class="plant-threshold">${p.threshold.min}% - ${p.threshold.max}%</p>
+            </div>
+        </div>
+    `).join('');
+>>>>>>> parent of dd6e02b (v5)
 }
 
 function filterPlants() {
@@ -235,7 +266,7 @@ function selectPlant(plant) {
 
 function displaySelectedPlant(plant) {
     const card = document.getElementById('currentReadingCard');
-    card.style.backgroundImage = `linear-gradient(135deg, rgba(95, 171, 149, 0.9) 0%, rgba(126, 200, 180, 0.9) 100%), url('${plant.image}')`;
+    card.style.backgroundImage = `linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%), url('${plant.image}')`;
     card.style.backgroundSize = 'cover';
     card.style.backgroundPosition = 'center';
     
@@ -290,6 +321,7 @@ async function addCustomPlant() {
         return;
     }
     
+<<<<<<< HEAD
     try {
         // Show loading state
         const btn = event.target;
@@ -390,6 +422,18 @@ async function deletePlant(plantId) {
     }
 }
 
+=======
+    PLANTS_DATABASE.push(plant);
+    selectPlant(plant);
+    
+    // Reset form
+    document.getElementById('customPlantName').value = '';
+    document.getElementById('customPlantMinThreshold').value = '';
+    document.getElementById('customPlantMaxThreshold').value = '';
+    preview.style.display = 'none';
+}
+
+>>>>>>> parent of dd6e02b (v5)
 // Calibration
 function startCalibration() {
     document.getElementById('calibrationModal').style.display = 'flex';
@@ -451,6 +495,7 @@ async function loadHistoricalData() {
         chartData.labels = [];
         chartData.values = [];
         
+<<<<<<< HEAD
         if (settings.timeRange === 168) {
             const dayGroups = {};
             const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -506,6 +551,17 @@ async function loadHistoricalData() {
                 }
             });
         }
+=======
+        let lastTime = 0;
+        data.forEach(r => {
+            const time = new Date(r.created_at).getTime();
+            if (time - lastTime >= CONFIG.CHART_DATA_INTERVAL) {
+                chartData.labels.push(formatTime(new Date(r.created_at)));
+                chartData.values.push(rawToPercentage(r.value));
+                lastTime = time;
+            }
+        });
+>>>>>>> parent of dd6e02b (v5)
         
         updateChart();
         
@@ -605,8 +661,8 @@ function showNotification(title, msg) {
 function initChart() {
     const ctx = document.getElementById('moistureChart').getContext('2d');
     const isDark = document.body.getAttribute('data-theme') === 'dark';
-    const textColor = isDark ? '#f0f5f4' : '#0a0f0e';
-    const gridColor = isDark ? 'rgba(240, 245, 244, 0.1)' : 'rgba(10, 15, 14, 0.1)';
+    const textColor = isDark ? '#e2e8f0' : '#4a5568';
+    const gridColor = isDark ? 'rgba(226, 232, 240, 0.1)' : 'rgba(0, 0, 0, 0.1)';
     
     chart = new Chart(ctx, {
         type: 'line',
@@ -615,8 +671,8 @@ function initChart() {
             datasets: [{
                 label: 'Moisture',
                 data: [],
-                borderColor: '#5fab95',
-                backgroundColor: 'rgba(95, 171, 149, 0.1)',
+                borderColor: '#667eea',
+                backgroundColor: 'rgba(102, 126, 234, 0.1)',
                 borderWidth: 2,
                 fill: true,
                 tension: 0.4
