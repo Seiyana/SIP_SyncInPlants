@@ -161,24 +161,35 @@
                     </div>
                 </div>
 
-                <!-- Chart Card -->
-                <div class="card">
-                    <div class="card-header">
-                        <h2>Historical Data</h2>
-                        <div class="chart-controls">
-                            <select id="timeRange" onchange="changeTimeRange()">
-                                <option value="1">Last Hour</option>
-                                <option value="6">Last 6 Hours</option>
-                                <option value="24" selected>Last 24 Hours</option>
-                                <option value="168">Last 7 Days</option>
-                            </select>
+                <!-- Chart Cards -->
+                <div class="charts-row">
+                    <div class="card chart-card">
+                        <div class="card-header">
+                            <h2>Last Hour</h2>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="hourChart"></canvas>
                         </div>
                     </div>
-                    <div class="chart-container">
-                        <canvas id="moistureChart"></canvas>
+
+                    <div class="card chart-card">
+                        <div class="card-header">
+                            <h2>Last 24 Hours</h2>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="dayChart"></canvas>
+                        </div>
                     </div>
                 </div>
 
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Last 7 Days</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="weekChart"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
 

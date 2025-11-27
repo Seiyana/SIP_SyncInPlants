@@ -35,16 +35,18 @@ const PLANTS_DATABASE = [
 ];
 
 // STATE
-let chart, realtimeSubscription, liveDataInterval;
-let chartData = { labels: [], values: [] };
+let hourChart, dayChart, weekChart, realtimeSubscription, liveDataInterval;
+let hourData = { labels: [], values: [] };
+let dayData = { labels: [], values: [] };
+let weekData = { labels: [], values: [] };
 let settings = {
     theme: 'light',
-    timeRange: 24,
     notificationsEnabled: false,
     calibration: { dry: 3200, wet: 1200 },
     selectedPlant: null,
     customPlants: []
 };
+
 let currentRawValue = 0;
 let lastNotificationTime = 0;
 
@@ -55,7 +57,7 @@ const supabase = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABA
 document.addEventListener('DOMContentLoaded', async () => {
     loadSettings();
     applyTheme();
-    initChart();
+    initCharts();
     populatePlants();
     await loadHistoricalData();
     setupRealtimeSubscription();
@@ -78,7 +80,6 @@ function loadSettings() {
         }
         
         document.getElementById('themeToggle').value = settings.theme;
-        document.getElementById('timeRange').value = settings.timeRange;
         document.getElementById('notificationsEnabled').checked = settings.notificationsEnabled;
         if (settings.selectedPlant) displaySelectedPlant(settings.selectedPlant);
     }
@@ -89,10 +90,8 @@ function saveSettings() {
 }
 
 function updateSettings() {
-    settings.timeRange = parseInt(document.getElementById('timeRange').value);
     settings.notificationsEnabled = document.getElementById('notificationsEnabled').checked;
     saveSettings();
-    loadHistoricalData();
 }
 
 function resetSettings() {
@@ -107,7 +106,6 @@ function resetSettings() {
     
     settings = {
         theme: 'light',
-        timeRange: 24,
         notificationsEnabled: false,
         calibration: { dry: 3200, wet: 1200 },
         selectedPlant: null,
@@ -136,18 +134,23 @@ function applyTheme() {
         ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
         : settings.theme;
     document.body.setAttribute('data-theme', theme);
-    if (chart) updateChartTheme();
+    if (hourchart) updateChartTheme();
 }
 
 function updateChartTheme() {
     const isDark = document.body.getAttribute('data-theme') === 'dark';
     const textColor = isDark ? '#f0f5f4' : '#0a0f0e';
     const gridColor = isDark ? 'rgba(240, 245, 244, 0.1)' : 'rgba(10, 15, 14, 0.1)';
-    chart.options.scales.x.ticks.color = textColor;
-    chart.options.scales.y.ticks.color = textColor;
-    chart.options.scales.x.grid.color = gridColor;
-    chart.options.scales.y.grid.color = gridColor;
-    chart.update();
+    
+    [hourChart, dayChart, weekChart].forEach(chart => {
+        if (chart) {
+            chart.options.scales.x.ticks.color = textColor;
+            chart.options.scales.y.ticks.color = textColor;
+            chart.options.scales.x.grid.color = gridColor;
+            chart.options.scales.y.grid.color = gridColor;
+            chart.update();
+        }
+    });
 }
 
 // Navigation
@@ -364,92 +367,112 @@ async function loadHistoricalData() {
     try {
         updateConnectionStatus('connecting');
         
-        const hoursAgo = new Date();
-        hoursAgo.setHours(hoursAgo.getHours() - settings.timeRange);
+        // Load last hour
+        await loadTimeRangeData(1, hourData);
+        updateChart(hourChart, hourData);
         
-        const { data, error } = await supabase
-            .from(CONFIG.TABLE_NAME)
-            .select('value, created_at')
-            .gte('created_at', hoursAgo.toISOString())
-            .order('created_at', { ascending: true });
+        // Load last 24 hours
+        await loadTimeRangeData(24, dayData);
+        updateChart(dayChart, dayData);
         
-        if (error) throw error;
-        
-        chartData.labels = [];
-        chartData.values = [];
-        
-        if (settings.timeRange === 168) {
-            // 7 days - group by day
-            const dayGroups = {};
-            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            
-            data.forEach(r => {
-                const date = new Date(r.created_at);
-                const dayKey = date.toDateString();
-                if (!dayGroups[dayKey]) {
-                    dayGroups[dayKey] = { values: [], day: days[date.getDay()] };
-                }
-                dayGroups[dayKey].values.push(r.value);
-            });
-            
-            Object.keys(dayGroups).sort((a, b) => new Date(a) - new Date(b)).forEach(key => {
-                const group = dayGroups[key];
-                const avg = group.values.reduce((a, b) => a + b, 0) / group.values.length;
-                chartData.labels.push(group.day);
-                chartData.values.push(rawToPercentage(Math.round(avg)));
-            });
-        } else if (settings.timeRange === 24) {
-            // 24 hours - one point per hour
-            const hourGroups = {};
-            
-            data.forEach(r => {
-                const date = new Date(r.created_at);
-                const hour = date.getHours();
-                if (!hourGroups[hour]) {
-                    hourGroups[hour] = { values: [], times: [] };
-                }
-                hourGroups[hour].values.push(r.value);
-                hourGroups[hour].times.push(date.getTime());
-            });
-            
-            // Get current hour and go back 24 hours
-            const now = new Date();
-            const currentHour = now.getHours();
-            
-            for (let i = 0; i < 24; i++) {
-                const hour = (currentHour - 23 + i + 24) % 24;
-                if (hourGroups[hour]) {
-                    const avg = hourGroups[hour].values.reduce((a, b) => a + b, 0) / hourGroups[hour].values.length;
-                    const label = hour === 0 ? '12am' : hour === 12 ? '12pm' : hour < 12 ? `${hour}am` : `${hour-12}pm`;
-                    chartData.labels.push(label);
-                    chartData.values.push(rawToPercentage(Math.round(avg)));
-                }
-            }
-        } else {
-            // 1 or 6 hours - use original logic
-            let lastTime = 0;
-            data.forEach(r => {
-                const time = new Date(r.created_at).getTime();
-                if (time - lastTime >= CONFIG.CHART_DATA_INTERVAL) {
-                    chartData.labels.push(formatTime(new Date(r.created_at)));
-                    chartData.values.push(rawToPercentage(r.value));
-                    lastTime = time;
-                }
-            });
-        }
-        
-        updateChart();
-        
-        if (data.length > 0) {
-            const latest = data[data.length - 1];
-            currentRawValue = latest.value;
-            updateCurrentValue(rawToPercentage(latest.value), new Date(latest.created_at));
-        }
+        // Load last 7 days
+        await loadTimeRangeData(168, weekData);
+        updateChart(weekChart, weekData);
         
         updateConnectionStatus('connected');
     } catch (err) {
         console.error('Load error:', err);
         updateConnectionStatus('disconnected');
+    }
+}
+
+async function loadTimeRangeData(hours, dataObj) {
+    const hoursAgo = new Date();
+    hoursAgo.setHours(hoursAgo.getHours() - hours);
+    
+    const { data, error } = await supabase
+        .from(CONFIG.TABLE_NAME)
+        .select('value, created_at')
+        .gte('created_at', hoursAgo.toISOString())
+        .order('created_at', { ascending: true });
+    
+    if (error) throw error;
+    
+    dataObj.labels = [];
+    dataObj.values = [];
+    
+    if (hours === 168) {
+        // 7 days - one point per day
+        const dayGroups = {};
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        
+        data.forEach(r => {
+            const date = new Date(r.created_at);
+            const dayKey = date.toDateString();
+            if (!dayGroups[dayKey]) {
+                dayGroups[dayKey] = { values: [], day: days[date.getDay()], date: date };
+            }
+            dayGroups[dayKey].values.push(r.value);
+        });
+        
+        Object.values(dayGroups)
+            .sort((a, b) => a.date - b.date)
+            .forEach(group => {
+                const avg = group.values.reduce((a, b) => a + b, 0) / group.values.length;
+                dataObj.labels.push(group.day);
+                dataObj.values.push(rawToPercentage(Math.round(avg)));
+            });
+    } else if (hours === 24) {
+        // 24 hours - one point per hour
+        const hourGroups = {};
+        
+        data.forEach(r => {
+            const date = new Date(r.created_at);
+            const hourKey = `${date.getDate()}-${date.getHours()}`;
+            if (!hourGroups[hourKey]) {
+                hourGroups[hourKey] = { values: [], hour: date.getHours(), time: date.getTime() };
+            }
+            hourGroups[hourKey].values.push(r.value);
+        });
+        
+        Object.values(hourGroups)
+            .sort((a, b) => a.time - b.time)
+            .forEach(group => {
+                const avg = group.values.reduce((a, b) => a + b, 0) / group.values.length;
+                const hour = group.hour;
+                const label = hour === 0 ? '12am' : hour === 12 ? '12pm' : hour < 12 ? `${hour}am` : `${hour-12}pm`;
+                dataObj.labels.push(label);
+                dataObj.values.push(rawToPercentage(Math.round(avg)));
+            });
+    } else {
+        // 1 hour - one point every 5 minutes
+        const minuteGroups = {};
+        
+        data.forEach(r => {
+            const date = new Date(r.created_at);
+            const minute = Math.floor(date.getMinutes() / 5) * 5;
+            const key = `${date.getHours()}:${minute}`;
+            if (!minuteGroups[key]) {
+                minuteGroups[key] = { values: [], time: date.getTime(), hour: date.getHours(), minute: minute };
+            }
+            minuteGroups[key].values.push(r.value);
+        });
+        
+        Object.values(minuteGroups)
+            .sort((a, b) => a.time - b.time)
+            .forEach(group => {
+                const avg = group.values.reduce((a, b) => a + b, 0) / group.values.length;
+                const label = `${group.hour.toString().padStart(2, '0')}:${group.minute.toString().padStart(2, '0')}`;
+                dataObj.labels.push(label);
+                dataObj.values.push(rawToPercentage(Math.round(avg)));
+            });
+    }
+    
+    // Update current value from latest reading
+    if (data.length > 0) {
+        const latest = data[data.length - 1];
+        currentRawValue = latest.value;
+        updateCurrentValue(rawToPercentage(latest.value), new Date(latest.created_at));
     }
 }
 
@@ -491,19 +514,36 @@ function handleNewReading(reading) {
     const time = new Date(reading.created_at);
     const pct = rawToPercentage(reading.value);
     
-    const lastTime = chartData.labels.length > 0 ? 
-        new Date(`${new Date().toDateString()} ${chartData.labels[chartData.labels.length - 1]}`).getTime() : 0;
+    // Update all charts
+    addDataPoint(hourData, time, pct, 1);
+    updateChart(hourChart, hourData);
     
-    if (time.getTime() - lastTime >= CONFIG.CHART_DATA_INTERVAL) {
-        chartData.labels.push(formatTime(time));
-        chartData.values.push(pct);
-        updateChart();
-    }
+    addDataPoint(dayData, time, pct, 24);
+    updateChart(dayChart, dayData);
+    
+    addDataPoint(weekData, time, pct, 168);
+    updateChart(weekChart, weekData);
     
     currentRawValue = reading.value;
     updateCurrentValue(pct, time);
     checkThreshold(pct);
     flashNewData();
+}
+
+function addDataPoint(dataObj, time, pct, hours) {
+    const label = hours === 1 ? formatTime(time) : 
+                  hours === 24 ? (time.getHours() === 0 ? '12am' : time.getHours() === 12 ? '12pm' : time.getHours() < 12 ? `${time.getHours()}am` : `${time.getHours()-12}pm`) :
+                  ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][time.getDay()];
+    
+    dataObj.labels.push(label);
+    dataObj.values.push(pct);
+    
+    // Keep only relevant data points
+    const maxPoints = hours === 1 ? 12 : hours === 24 ? 24 : 7;
+    if (dataObj.labels.length > maxPoints) {
+        dataObj.labels.shift();
+        dataObj.values.shift();
+    }
 }
 
 function checkThreshold(pct) {
@@ -533,13 +573,12 @@ function showNotification(title, msg) {
 }
 
 // Chart
-function initChart() {
-    const ctx = document.getElementById('moistureChart').getContext('2d');
+function initCharts() {
     const isDark = document.body.getAttribute('data-theme') === 'dark';
     const textColor = isDark ? '#f0f5f4' : '#0a0f0e';
     const gridColor = isDark ? 'rgba(240, 245, 244, 0.1)' : 'rgba(10, 15, 14, 0.1)';
     
-    chart = new Chart(ctx, {
+    const chartConfig = {
         type: 'line',
         data: {
             labels: [],
@@ -578,20 +617,18 @@ function initChart() {
                 }
             }
         }
-    });
+    };
+    
+    hourChart = new Chart(document.getElementById('hourChart').getContext('2d'), JSON.parse(JSON.stringify(chartConfig)));
+    dayChart = new Chart(document.getElementById('dayChart').getContext('2d'), JSON.parse(JSON.stringify(chartConfig)));
+    weekChart = new Chart(document.getElementById('weekChart').getContext('2d'), JSON.parse(JSON.stringify(chartConfig)));
 }
 
-function updateChart() {
+function updateChart(chart, dataObj) {
     if (!chart) return;
-    chart.data.labels = chartData.labels;
-    chart.data.datasets[0].data = chartData.values;
+    chart.data.labels = dataObj.labels;
+    chart.data.datasets[0].data = dataObj.values;
     chart.update('none');
-}
-
-function changeTimeRange() {
-    settings.timeRange = parseInt(document.getElementById('timeRange').value);
-    saveSettings();
-    loadHistoricalData();
 }
 
 // UI Updates

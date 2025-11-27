@@ -643,6 +643,17 @@ main {
     min-height: 400px;
 }
 
+.charts-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.chart-card {
+    min-height: 350px;
+}
+
 .settings-content {
     padding: 2rem;
 }
@@ -957,6 +968,7 @@ main {
     .panel-content { width: 100%; }
     .plants-grid { grid-template-columns: 1fr; }
     .threshold-inputs { grid-template-columns: 1fr; }
+    .charts-row { grid-template-columns: 1fr; }  /* ADD THIS LINE */
 }
 
 @media (max-width: 480px) {
