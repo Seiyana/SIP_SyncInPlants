@@ -68,7 +68,10 @@ function updateSettings() {
 function resetSettings() {
     if (!confirm('Reset all settings to defaults?')) return;
 <<<<<<< HEAD
+<<<<<<< HEAD
     
+=======
+>>>>>>> parent of dd6e02b (v5)
 =======
 >>>>>>> parent of dd6e02b (v5)
     settings = {
@@ -250,6 +253,9 @@ async function populatePlants() {
             </div>
         </div>
     `).join('');
+<<<<<<< HEAD
+>>>>>>> parent of dd6e02b (v5)
+=======
 >>>>>>> parent of dd6e02b (v5)
 }
 
@@ -321,6 +327,7 @@ async function addCustomPlant() {
         return;
     }
     
+<<<<<<< HEAD
 <<<<<<< HEAD
     try {
         // Show loading state
@@ -423,6 +430,8 @@ async function deletePlant(plantId) {
 }
 
 =======
+=======
+>>>>>>> parent of dd6e02b (v5)
     PLANTS_DATABASE.push(plant);
     selectPlant(plant);
     
@@ -433,6 +442,9 @@ async function deletePlant(plantId) {
     preview.style.display = 'none';
 }
 
+<<<<<<< HEAD
+>>>>>>> parent of dd6e02b (v5)
+=======
 >>>>>>> parent of dd6e02b (v5)
 // Calibration
 function startCalibration() {
@@ -496,6 +508,7 @@ async function loadHistoricalData() {
         chartData.values = [];
         
 <<<<<<< HEAD
+<<<<<<< HEAD
         if (settings.timeRange === 168) {
             const dayGroups = {};
             const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -551,6 +564,17 @@ async function loadHistoricalData() {
                 }
             });
         }
+=======
+        let lastTime = 0;
+        data.forEach(r => {
+            const time = new Date(r.created_at).getTime();
+            if (time - lastTime >= CONFIG.CHART_DATA_INTERVAL) {
+                chartData.labels.push(formatTime(new Date(r.created_at)));
+                chartData.values.push(rawToPercentage(r.value));
+                lastTime = time;
+            }
+        });
+>>>>>>> parent of dd6e02b (v5)
 =======
         let lastTime = 0;
         data.forEach(r => {
