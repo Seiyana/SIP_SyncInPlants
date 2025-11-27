@@ -42,7 +42,8 @@ let settings = {
     timeRange: 24,
     notificationsEnabled: false,
     calibration: { dry: 3200, wet: 1200 },
-    selectedPlant: null
+    selectedPlant: null,
+    customPlants: []
 };
 let currentRawValue = 0;
 let lastNotificationTime = 0;
@@ -70,6 +71,12 @@ function loadSettings() {
     const saved = localStorage.getItem('moistureMonitorSettings');
     if (saved) {
         settings = { ...settings, ...JSON.parse(saved) };
+        
+        // Load custom plants
+        if (settings.customPlants && settings.customPlants.length > 0) {
+            PLANTS_DATABASE.push(...settings.customPlants);
+        }
+        
         document.getElementById('themeToggle').value = settings.theme;
         document.getElementById('timeRange').value = settings.timeRange;
         document.getElementById('notificationsEnabled').checked = settings.notificationsEnabled;
@@ -90,16 +97,26 @@ function updateSettings() {
 
 function resetSettings() {
     if (!confirm('Reset all settings to defaults?')) return;
+    
+    // Remove custom plants from database
+    const customPlants = settings.customPlants || [];
+    customPlants.forEach(cp => {
+        const idx = PLANTS_DATABASE.findIndex(p => p.name === cp.name && p.rarity === 'Custom');
+        if (idx > -1) PLANTS_DATABASE.splice(idx, 1);
+    });
+    
     settings = {
         theme: 'light',
         timeRange: 24,
         notificationsEnabled: false,
         calibration: { dry: 3200, wet: 1200 },
-        selectedPlant: null
+        selectedPlant: null,
+        customPlants: []
     };
     saveSettings();
     loadSettings();
     applyTheme();
+    populatePlants();
     document.getElementById('plantInfo').style.display = 'none';
     const card = document.getElementById('currentReadingCard');
     card.style.backgroundImage = '';
@@ -124,8 +141,8 @@ function applyTheme() {
 
 function updateChartTheme() {
     const isDark = document.body.getAttribute('data-theme') === 'dark';
-    const textColor = isDark ? '#e2e8f0' : '#4a5568';
-    const gridColor = isDark ? 'rgba(226, 232, 240, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+    const textColor = isDark ? '#f0f5f4' : '#0a0f0e';
+    const gridColor = isDark ? 'rgba(240, 245, 244, 0.1)' : 'rgba(10, 15, 14, 0.1)';
     chart.options.scales.x.ticks.color = textColor;
     chart.options.scales.y.ticks.color = textColor;
     chart.options.scales.x.grid.color = gridColor;
@@ -159,15 +176,20 @@ function populatePlants() {
     
     if (filter === 'az') plants.sort((a, b) => a.name.localeCompare(b.name));
     else if (filter === 'rarity') {
-        const order = { Common: 1, Uncommon: 2, Rare: 3 };
+        const order = { Common: 1, Uncommon: 2, Rare: 3, Custom: 4 };
         plants.sort((a, b) => order[a.rarity] - order[b.rarity]);
     } else if (filter === 'moisture') {
         const order = { Low: 1, Medium: 2, High: 3 };
         plants.sort((a, b) => order[a.moisture] - order[b.moisture]);
     }
     
-    grid.innerHTML = plants.map(p => `
-        <div class="plant-card" onclick="selectPlant(${JSON.stringify(p).replace(/"/g, '&quot;')})">
+    grid.innerHTML = plants.map(p => {
+        const isCustom = p.rarity === 'Custom';
+        const deleteBtn = isCustom ? `<button class="delete-plant-btn" onclick="event.stopPropagation(); deletePlant('${p.name}')">×</button>` : '';
+        
+        return `
+        <div class="plant-card" onclick='selectPlant(${JSON.stringify(p).replace(/'/g, "\\'")})'> 
+            ${deleteBtn}
             <img src="${p.image}" alt="${p.name}" onerror="this.src='https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=400'">
             <div class="plant-card-info">
                 <h3>${p.name}</h3>
@@ -178,7 +200,8 @@ function populatePlants() {
                 <p class="plant-threshold">${p.threshold.min}% - ${p.threshold.max}%</p>
             </div>
         </div>
-    `).join('');
+    `;
+    }).join('');
 }
 
 function filterPlants() {
@@ -194,7 +217,7 @@ function selectPlant(plant) {
 
 function displaySelectedPlant(plant) {
     const card = document.getElementById('currentReadingCard');
-    card.style.backgroundImage = `linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%), url('${plant.image}')`;
+    card.style.backgroundImage = `linear-gradient(135deg, rgba(95, 171, 149, 0.9) 0%, rgba(126, 200, 180, 0.9) 100%), url('${plant.image}')`;
     card.style.backgroundSize = 'cover';
     card.style.backgroundPosition = 'center';
     
@@ -251,14 +274,47 @@ function addCustomPlant() {
         image: preview.src || 'https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=400'
     };
     
+    // Add to database and custom plants list
     PLANTS_DATABASE.push(plant);
+    if (!settings.customPlants) settings.customPlants = [];
+    settings.customPlants.push(plant);
+    saveSettings();
+    
     selectPlant(plant);
+    populatePlants();
     
     // Reset form
     document.getElementById('customPlantName').value = '';
     document.getElementById('customPlantMinThreshold').value = '';
     document.getElementById('customPlantMaxThreshold').value = '';
     preview.style.display = 'none';
+}
+
+function deletePlant(plantName) {
+    if (!confirm(`Delete "${plantName}"?`)) return;
+    
+    // Find and remove from database
+    const idx = PLANTS_DATABASE.findIndex(p => p.name === plantName && p.rarity === 'Custom');
+    if (idx > -1) {
+        PLANTS_DATABASE.splice(idx, 1);
+    }
+    
+    // Remove from custom plants list
+    if (settings.customPlants) {
+        settings.customPlants = settings.customPlants.filter(p => p.name !== plantName);
+    }
+    
+    // Clear selected plant if it was deleted
+    if (settings.selectedPlant?.name === plantName) {
+        settings.selectedPlant = null;
+        document.getElementById('plantInfo').style.display = 'none';
+        const card = document.getElementById('currentReadingCard');
+        card.style.backgroundImage = '';
+        card.style.background = 'var(--accent-gradient)';
+    }
+    
+    saveSettings();
+    populatePlants();
 }
 
 // Calibration
@@ -322,15 +378,65 @@ async function loadHistoricalData() {
         chartData.labels = [];
         chartData.values = [];
         
-        let lastTime = 0;
-        data.forEach(r => {
-            const time = new Date(r.created_at).getTime();
-            if (time - lastTime >= CONFIG.CHART_DATA_INTERVAL) {
-                chartData.labels.push(formatTime(new Date(r.created_at)));
-                chartData.values.push(rawToPercentage(r.value));
-                lastTime = time;
+        if (settings.timeRange === 168) {
+            // 7 days - group by day
+            const dayGroups = {};
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            
+            data.forEach(r => {
+                const date = new Date(r.created_at);
+                const dayKey = date.toDateString();
+                if (!dayGroups[dayKey]) {
+                    dayGroups[dayKey] = { values: [], day: days[date.getDay()] };
+                }
+                dayGroups[dayKey].values.push(r.value);
+            });
+            
+            Object.keys(dayGroups).sort((a, b) => new Date(a) - new Date(b)).forEach(key => {
+                const group = dayGroups[key];
+                const avg = group.values.reduce((a, b) => a + b, 0) / group.values.length;
+                chartData.labels.push(group.day);
+                chartData.values.push(rawToPercentage(Math.round(avg)));
+            });
+        } else if (settings.timeRange === 24) {
+            // 24 hours - one point per hour
+            const hourGroups = {};
+            
+            data.forEach(r => {
+                const date = new Date(r.created_at);
+                const hour = date.getHours();
+                if (!hourGroups[hour]) {
+                    hourGroups[hour] = { values: [], times: [] };
+                }
+                hourGroups[hour].values.push(r.value);
+                hourGroups[hour].times.push(date.getTime());
+            });
+            
+            // Get current hour and go back 24 hours
+            const now = new Date();
+            const currentHour = now.getHours();
+            
+            for (let i = 0; i < 24; i++) {
+                const hour = (currentHour - 23 + i + 24) % 24;
+                if (hourGroups[hour]) {
+                    const avg = hourGroups[hour].values.reduce((a, b) => a + b, 0) / hourGroups[hour].values.length;
+                    const label = hour === 0 ? '12am' : hour === 12 ? '12pm' : hour < 12 ? `${hour}am` : `${hour-12}pm`;
+                    chartData.labels.push(label);
+                    chartData.values.push(rawToPercentage(Math.round(avg)));
+                }
             }
-        });
+        } else {
+            // 1 or 6 hours - use original logic
+            let lastTime = 0;
+            data.forEach(r => {
+                const time = new Date(r.created_at).getTime();
+                if (time - lastTime >= CONFIG.CHART_DATA_INTERVAL) {
+                    chartData.labels.push(formatTime(new Date(r.created_at)));
+                    chartData.values.push(rawToPercentage(r.value));
+                    lastTime = time;
+                }
+            });
+        }
         
         updateChart();
         
@@ -430,8 +536,8 @@ function showNotification(title, msg) {
 function initChart() {
     const ctx = document.getElementById('moistureChart').getContext('2d');
     const isDark = document.body.getAttribute('data-theme') === 'dark';
-    const textColor = isDark ? '#e2e8f0' : '#4a5568';
-    const gridColor = isDark ? 'rgba(226, 232, 240, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+    const textColor = isDark ? '#f0f5f4' : '#0a0f0e';
+    const gridColor = isDark ? 'rgba(240, 245, 244, 0.1)' : 'rgba(10, 15, 14, 0.1)';
     
     chart = new Chart(ctx, {
         type: 'line',
@@ -440,8 +546,8 @@ function initChart() {
             datasets: [{
                 label: 'Moisture',
                 data: [],
-                borderColor: '#667eea',
-                backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                borderColor: '#5fab95',
+                backgroundColor: 'rgba(95, 171, 149, 0.1)',
                 borderWidth: 2,
                 fill: true,
                 tension: 0.4
