@@ -192,7 +192,7 @@ header h1 {
     background: rgba(0, 0, 0, 0.5);
     z-index: 1000;
     transition: right 0.3s ease;
-    overflow-y: auto;
+    overflow: hidden;
 }
 
 .plant-panel.active {
@@ -208,21 +208,31 @@ header h1 {
     height: 100%;
     background: var(--bg-secondary);
     box-shadow: var(--shadow-lg);
-    padding: 2rem;
     overflow-y: auto;
     transform: translateX(100%);
     transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
 }
 
 .plant-panel.active .panel-content {
     transform: translateX(0);
 }
 
+.panel-sticky-header {
+    position: sticky;
+    top: 0;
+    background: var(--bg-secondary);
+    z-index: 10;
+    padding: 2rem 2rem 0 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
 .panel-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
 }
 
 .panel-header h2 {
@@ -271,15 +281,42 @@ header h1 {
     margin-bottom: 1.5rem;
 }
 
-.panel-filters select {
-    width: 100%;
-    padding: 0.75rem;
+.filter-bubbles {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.filter-bubble {
+    padding: 0.5rem 1rem;
+    background: var(--bg-tertiary);
     border: 2px solid var(--border-color);
-    border-radius: 8px;
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    font-size: 1rem;
+    border-radius: 20px;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 500;
     cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filter-bubble:hover {
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+.filter-bubble.active {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: white;
+}
+
+.tab-content {
+    display: none;
+    padding: 0 2rem 2rem 2rem;
+}
+
+.tab-content.active {
+    display: block;
 }
 
 .plants-grid {
@@ -914,7 +951,7 @@ main {
     height: 150px;
     border-radius: 8px;
     object-fit: cover;
-    margin-bottom: 1rem;
+    margin-top: 1rem;
     background: var(--bg-tertiary);
 }
 
@@ -947,14 +984,6 @@ main {
     color: var(--text-primary);
 }
 
-.tab-content {
-    display: none;
-}
-
-.tab-content.active {
-    display: block;
-}
-
 @media (max-width: 768px) {
     header { padding: 1rem; }
     header h1 { font-size: 1.25rem; }
@@ -968,7 +997,7 @@ main {
     .panel-content { width: 100%; }
     .plants-grid { grid-template-columns: 1fr; }
     .threshold-inputs { grid-template-columns: 1fr; }
-    .charts-row { grid-template-columns: 1fr; }  /* ADD THIS LINE */
+    .charts-row { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 480px) {

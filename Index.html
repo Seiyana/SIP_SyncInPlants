@@ -46,27 +46,30 @@
     </div>
 
     <!-- Plant Selection Panel -->
-    <div id="plantPanel" class="plant-panel">
-        <div class="panel-content">
-            <div class="panel-header">
-                <h2>Select Your Plant</h2>
-                <button class="close-panel" onclick="closePlantPanel()">×</button>
-            </div>
-            
-            <div class="panel-tabs">
-                <button class="panel-tab active" onclick="switchTab('browse')">Browse Plants</button>
-                <button class="panel-tab" onclick="switchTab('custom')">Add Custom Plant</button>
+    <div id="plantPanel" class="plant-panel" onclick="handlePanelClick(event)">
+        <div class="panel-content" onclick="event.stopPropagation()">
+            <div class="panel-sticky-header">
+                <div class="panel-header">
+                    <h2>Select Your Plant</h2>
+                    <button class="close-panel" onclick="closePlantPanel()">×</button>
+                </div>
+                
+                <div class="panel-tabs">
+                    <button class="panel-tab active" onclick="switchTab('browse')">Browse Plants</button>
+                    <button class="panel-tab" onclick="switchTab('custom')">Add Custom Plant</button>
+                </div>
+
+                <div id="browseTabFilters" class="panel-filters">
+                    <div class="filter-bubbles">
+                        <button class="filter-bubble active" data-filter="all" onclick="filterPlants('all')">All Plants</button>
+                        <button class="filter-bubble" data-filter="az" onclick="filterPlants('az')">A-Z</button>
+                        <button class="filter-bubble" data-filter="rarity" onclick="filterPlants('rarity')">By Rarity</button>
+                        <button class="filter-bubble" data-filter="moisture" onclick="filterPlants('moisture')">By Moisture</button>
+                    </div>
+                </div>
             </div>
 
             <div id="browseTab" class="tab-content active">
-                <div class="panel-filters">
-                    <select id="plantFilter" onchange="filterPlants()">
-                        <option value="all">All Plants</option>
-                        <option value="az">A-Z</option>
-                        <option value="rarity">By Rarity</option>
-                        <option value="moisture">By Moisture Level</option>
-                    </select>
-                </div>
                 <div class="plants-grid" id="plantsGrid"></div>
             </div>
 

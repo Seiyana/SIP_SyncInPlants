@@ -10,28 +10,9 @@ const CONFIG = {
 
 // PLANT DATABASE
 const PLANTS_DATABASE = [
-    // Common Plants
     { name: 'Snake Plant', rarity: 'Common', moisture: 'Low', threshold: { min: 20, max: 40 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Snake_Plant.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9TbmFrZV9QbGFudC5wbmciLCJpYXQiOjE3NjQxODMyMTIsImV4cCI6MTc5NTcxOTIxMn0.mMhWuc5qUFIZ9XDbn-9NuU5Hp_-SueFrTwjHi2_JyQ4' },
     { name: 'Pothos', rarity: 'Common', moisture: 'Medium', threshold: { min: 40, max: 60 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Pothos.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9Qb3Rob3MucG5nIiwiaWF0IjoxNzY0MTgzMjQ5LCJleHAiOjE3OTU3MTkyNDl9.4T6tl4f_JVodFQ8GtuIzQ8B7qy50Kc6CmCcIR2EBVGs' },
-    { name: 'Spider Plant', rarity: 'Common', moisture: 'Medium', threshold: { min: 40, max: 60 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Spider_Plant.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9TcGlkZXJfUGxhbnQucG5nIiwiaWF0IjoxNzY0MTgzMjg2LCJleHAiOjE3OTU3MTkyODZ9.aYzrtDMURW2eYbjwDzfoHAcFFcjgu8x07VlzjQZWM64' },
-    { name: 'Aloe Vera', rarity: 'Common', moisture: 'Low', threshold: { min: 20, max: 35 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Aloe_Vera.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9BbG9lX1ZlcmEucG5nIiwiaWF0IjoxNzY0MTgzMzExLCJleHAiOjE3OTU3MTkzMTF9.VP0U4yJh289w7SbVKxHdP9EMAkJJcSTMuOi1XOoUnzE' },
-    { name: 'Peace Lily', rarity: 'Common', moisture: 'High', threshold: { min: 60, max: 80 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Peace_Lily.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9QZWFjZV9MaWx5LnBuZyIsImlhdCI6MTc2NDE4MzMzMywiZXhwIjoxNzk1NzE5MzMzfQ.OYeM4MR9v-owVi0JfXE-NoIrJ1P76Ydqb2rHdsq_J-s' },
-    { name: 'ZZ Plant', rarity: 'Common', moisture: 'Low', threshold: { min: 20, max: 40 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/ZZ_plant.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9aWl9wbGFudC5wbmciLCJpYXQiOjE3NjQxODM0MTcsImV4cCI6MTc5NTcxOTQxN30.GKrEVbk9siWIsHqtdpT_iEJk4QFYavB6Hzj-M7pP7ws' },
-    { name: 'Jade Plant', rarity: 'Common', moisture: 'Low', threshold: { min: 25, max: 40 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Jade_Plant.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9KYWRlX1BsYW50LnBuZyIsImlhdCI6MTc2NDE4MzQzMCwiZXhwIjoxNzk1NzE5NDMwfQ.q_R3d2P_hsPdBIHHu5f6akVEJhI4vH389FoQVLWvGJ4' },
-    // Uncommon Plants
-    { name: 'Monstera Deliciosa', rarity: 'Uncommon', moisture: 'Medium', threshold: { min: 50, max: 70 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Monstera_Deliciosa.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9Nb25zdGVyYV9EZWxpY2lvc2EucG5nIiwiaWF0IjoxNzY0MTgzNDQwLCJleHAiOjE3OTU3MTk0NDB9.bDAi8kKgaSwckFPiqQsViLrPcDN3-Bs8ds310fKbTOk' },
-    { name: 'Fiddle Leaf Fig', rarity: 'Uncommon', moisture: 'Medium', threshold: { min: 45, max: 65 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Fiddle_Leaf_Fig.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9GaWRkbGVfTGVhZl9GaWcucG5nIiwiaWF0IjoxNzY0MTgzNDQ5LCJleHAiOjE3OTU3MTk0NDl9.XjSFbc_Ul96u16lzAQNGH45XP1MUmVtheJ9csK6uNwk' },
-    { name: 'Rubber Plant', rarity: 'Uncommon', moisture: 'Medium', threshold: { min: 40, max: 60 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Rubber_Plant.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9SdWJiZXJfUGxhbnQucG5nIiwiaWF0IjoxNzY0MTgzNDYxLCJleHAiOjE3OTU3MTk0NjF9.zhE1Ci0-C93YPch4K2RyE_DoHPIvpKipNbsTtIZvb1w' },
-    { name: 'Calathea', rarity: 'Uncommon', moisture: 'High', threshold: { min: 65, max: 85 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Calathea.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9DYWxhdGhlYS5wbmciLCJpYXQiOjE3NjQxODM0NzcsImV4cCI6MTc5NTcxOTQ3N30.J8CK8H61EkAZzkVHq2Hnn2oUpLH4LgzJvYTL-AtIqJc' },
-    { name: 'Boston Fern', rarity: 'Uncommon', moisture: 'High', threshold: { min: 70, max: 90 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Boston_Fern.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9Cb3N0b25fRmVybi5wbmciLCJpYXQiOjE3NjQxODM0ODgsImV4cCI6MTc5NTcxOTQ4OH0.gq6z-fjTlTpt-XDBWSJrTGYCGgobehwLy-ww-ZssDOk' },
-    { name: 'Philodendron', rarity: 'Uncommon', moisture: 'Medium', threshold: { min: 45, max: 65 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Philodendron.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9QaGlsb2RlbmRyb24ucG5nIiwiaWF0IjoxNzY0MTgzNDk2LCJleHAiOjE3OTU3MTk0OTZ9.T7Dh3YoI5aWBqiSGgEMiLrHpAqAbmxbjbw7dg51da-8' },
-    // Rare Plants
-    { name: 'Variegated Monstera', rarity: 'Rare', moisture: 'Medium', threshold: { min: 50, max: 70 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Variegated_Monstera.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9WYXJpZWdhdGVkX01vbnN0ZXJhLnBuZyIsImlhdCI6MTc2NDE4MzUwNiwiZXhwIjoxNzk1NzE5NTA2fQ.VKQtQ905lzVSaHIs6vnjCGPOAVl67JACYiOSX9zdiTg' },
-    { name: 'Alocasia Polly', rarity: 'Rare', moisture: 'High', threshold: { min: 65, max: 85 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Alocasia_Polly.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9BbG9jYXNpYV9Qb2xseS5wbmciLCJpYXQiOjE3NjQxODM1MTUsImV4cCI6MTc5NTcxOTUxNX0.QaWkQEPqGnEjJz6ehdviHLj6HCWMIzCxbH_1rNv-4Ms' },
-    { name: 'String of Hearts', rarity: 'Rare', moisture: 'Low', threshold: { min: 25, max: 45 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/String_of_Hearts.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9TdHJpbmdfb2ZfSGVhcnRzLnBuZyIsImlhdCI6MTc2NDE4MzUyNCwiZXhwIjoxNzk1NzE5NTI0fQ.Src9ZTRM8nDqSm8F7WcdNAd4X2-3jzGwDl-qqH_aqaI' },
-    { name: 'Pink Princess Philodendron', rarity: 'Rare', moisture: 'Medium', threshold: { min: 50, max: 70 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Pink_Princess_Philodendron.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9QaW5rX1ByaW5jZXNzX1BoaWxvZGVuZHJvbi5wbmciLCJpYXQiOjE3NjQxODM1MzUsImV4cCI6MTc5NTcxOTUzNX0.QqjwUBdl9gQ-AFQequHPlC1poWQXzd4ughDpw67c85k' },
-    { name: 'Anthurium Clarinervium', rarity: 'Rare', moisture: 'High', threshold: { min: 60, max: 80 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Anthurium_Clarinervium.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9BbnRodXJpdW1fQ2xhcmluZXJ2aXVtLnBuZyIsImlhdCI6MTc2NDE4MzU0MywiZXhwIjoxNzk1NzE5NTQzfQ.vArQ6vsMQQ5wBOegLfEEfj-2Z1xXyT7_EKjH7keMej8' },
-    { name: 'Hoya Carnosa', rarity: 'Rare', moisture: 'Low', threshold: { min: 30, max: 50 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Hoya_Carnosa.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9Ib3lhX0Nhcm5vc2EucG5nIiwiaWF0IjoxNzY0MTgzNTUxLCJleHAiOjE3OTU3MTk1NTF9.7pRzRFTWegfnvjM5dXSgg5nj4l3btfgYIHWCJVPDrFY' }
+    { name: 'Spider Plant', rarity: 'Common', moisture: 'Medium', threshold: { min: 40, max: 60 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Spider_Plant.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9TcGlkZXJfUGxhbnQucG5nIiwiaWF0IjoxNzY0MTgzMjg2LCJleHAiOjE3OTU3MTkyODZ9.aYzrtDMURW2eYbjwDzfoHAcFFcjgu8x07VlzjQZWM64' }
 ];
 
 // STATE
@@ -39,6 +20,7 @@ let hourChart, dayChart, weekChart, realtimeSubscription, liveDataInterval;
 let hourData = { labels: [], values: [] };
 let dayData = { labels: [], values: [] };
 let weekData = { labels: [], values: [] };
+let currentFilter = 'all';
 let settings = {
     theme: 'light',
     notificationsEnabled: false,
@@ -66,6 +48,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     const imgInput = document.getElementById('customPlantImage');
     if (imgInput) imgInput.addEventListener('change', handleImagePreview);
+    
+    // Close panel when clicking outside
+    const plantPanel = document.getElementById('plantPanel');
+    if (plantPanel) {
+        plantPanel.addEventListener('click', handlePanelClick);
+    }
 });
 
 // Settings
@@ -79,8 +67,12 @@ function loadSettings() {
             PLANTS_DATABASE.push(...settings.customPlants);
         }
         
-        document.getElementById('themeToggle').value = settings.theme;
-        document.getElementById('notificationsEnabled').checked = settings.notificationsEnabled;
+        const themeToggle = document.getElementById('themeToggle');
+        const notifToggle = document.getElementById('notificationsEnabled');
+        
+        if (themeToggle) themeToggle.value = settings.theme;
+        if (notifToggle) notifToggle.checked = settings.notificationsEnabled;
+        
         if (settings.selectedPlant) displaySelectedPlant(settings.selectedPlant);
     }
 }
@@ -134,7 +126,7 @@ function applyTheme() {
         ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
         : settings.theme;
     document.body.setAttribute('data-theme', theme);
-    if (hourchart) updateChartTheme();
+    if (hourChart) updateChartTheme();
 }
 
 function updateChartTheme() {
@@ -175,13 +167,14 @@ function populatePlants() {
     if (!grid) return;
     
     let plants = [...PLANTS_DATABASE];
-    const filter = document.getElementById('plantFilter')?.value || 'all';
     
-    if (filter === 'az') plants.sort((a, b) => a.name.localeCompare(b.name));
-    else if (filter === 'rarity') {
+    // Filter plants
+    if (currentFilter === 'az') {
+        plants.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (currentFilter === 'rarity') {
         const order = { Common: 1, Uncommon: 2, Rare: 3, Custom: 4 };
         plants.sort((a, b) => order[a.rarity] - order[b.rarity]);
-    } else if (filter === 'moisture') {
+    } else if (currentFilter === 'moisture') {
         const order = { Low: 1, Medium: 2, High: 3 };
         plants.sort((a, b) => order[a.moisture] - order[b.moisture]);
     }
@@ -207,7 +200,15 @@ function populatePlants() {
     }).join('');
 }
 
-function filterPlants() {
+function filterPlants(filter) {
+    currentFilter = filter;
+    
+    // Update active filter bubble
+    document.querySelectorAll('.filter-bubble').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
     populatePlants();
 }
 
@@ -237,12 +238,27 @@ function closePlantPanel() {
     document.getElementById('plantPanel').classList.remove('active');
 }
 
+function handlePanelClick(event) {
+    // Close panel if clicking outside the panel content
+    if (event.target.id === 'plantPanel') {
+        closePlantPanel();
+    }
+}
+
 function switchTab(tab) {
     document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
     
     event.target.classList.add('active');
     document.getElementById(tab + 'Tab').classList.add('active');
+    
+    // Reset filter to 'all' when switching tabs
+    if (tab === 'browse') {
+        currentFilter = 'all';
+        document.querySelectorAll('.filter-bubble').forEach(btn => btn.classList.remove('active'));
+        document.querySelector('[data-filter="all"]').classList.add('active');
+        populatePlants();
+    }
 }
 
 function handleImagePreview(e) {
@@ -250,9 +266,9 @@ function handleImagePreview(e) {
     if (!file) return;
     
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = (event) => {
         const preview = document.getElementById('customImagePreview');
-        preview.src = e.target.result;
+        preview.src = event.target.result;
         preview.style.display = 'block';
     };
     reader.readAsDataURL(file);
@@ -269,12 +285,17 @@ function addCustomPlant() {
         return;
     }
     
+    if (!preview.src || preview.style.display === 'none') {
+        alert('Please upload a plant image');
+        return;
+    }
+    
     const plant = {
         name,
         rarity: 'Custom',
         moisture: min < 35 ? 'Low' : (min < 55 ? 'Medium' : 'High'),
         threshold: { min, max },
-        image: preview.src || 'https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=400'
+        image: preview.src
     };
     
     // Add to database and custom plants list
@@ -290,6 +311,7 @@ function addCustomPlant() {
     document.getElementById('customPlantName').value = '';
     document.getElementById('customPlantMinThreshold').value = '';
     document.getElementById('customPlantMaxThreshold').value = '';
+    document.getElementById('customPlantImage').value = '';
     preview.style.display = 'none';
 }
 
@@ -400,6 +422,10 @@ async function loadTimeRangeData(hours, dataObj) {
     
     dataObj.labels = [];
     dataObj.values = [];
+    
+    if (!data || data.length === 0) {
+        return;
+    }
     
     if (hours === 168) {
         // 7 days - one point per day
