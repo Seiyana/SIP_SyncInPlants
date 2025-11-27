@@ -143,26 +143,38 @@ async function loadCustomPlants() {
     }
 }
 
-// Plants - Populate from Supabase
 async function populatePlants() {
     const grid = document.getElementById('plantsGrid');
     if (!grid) return;
     
     try {
-        // Fetch default plants from Supabase
-        const { data: defaultPlants, error } = await supabase
+        // Fetch both default and custom plants from Supabase
+        const { data: defaultPlants, error: defaultError } = await supabase
             .from('default_plants')
             .select('*')
             .order('name', { ascending: true });
         
-        if (error && error.code !== 'PGRST116') throw error; // Ignore "no rows" error
+        if (defaultError && defaultError.code !== 'PGRST116') throw defaultError;
         
-        const allPlants = [...(defaultPlants || []), ...customPlants];
+        const { data: customPlantsData, error: customError } = await supabase
+            .from('custom_plants')
+            .select('*')
+            .order('created_at', { ascending: false });
+        
+        if (customError && customError.code !== 'PGRST116') throw customError;
+        
+        // Combine all plants
+        const allPlants = [...(defaultPlants || []), ...(customPlantsData || [])];
+        
+        // Get filter value
         const filter = document.getElementById('plantFilter')?.value || 'all';
         
+        // Apply filters and sorting
         let filtered = [...allPlants];
-        if (filter === 'az') filtered.sort((a, b) => a.name.localeCompare(b.name));
-        else if (filter === 'rarity') {
+        
+        if (filter === 'az') {
+            filtered.sort((a, b) => a.name.localeCompare(b.name));
+        } else if (filter === 'rarity') {
             const order = { Common: 1, Uncommon: 2, Rare: 3, Custom: 4 };
             filtered.sort((a, b) => (order[a.rarity] || 5) - (order[b.rarity] || 5));
         } else if (filter === 'moisture') {
@@ -170,27 +182,43 @@ async function populatePlants() {
             filtered.sort((a, b) => (order[a.moisture] || 5) - (order[b.moisture] || 5));
         }
         
+        // Generate HTML for plant cards
         grid.innerHTML = filtered.map(p => {
             const isCustom = p.rarity === 'Custom';
-            const deleteBtn = isCustom ? `<button class="delete-plant-btn" onclick="event.stopPropagation(); deletePlant(${p.id})">×</button>` : '';
+            const deleteBtn = isCustom 
+                ? `<button class="delete-plant-btn" onclick="event.stopPropagation(); deletePlant(${p.id})">×</button>` 
+                : '';
+            
+            // Parse threshold if it's a string (from database)
+            const threshold = typeof p.threshold === 'string' 
+                ? JSON.parse(p.threshold) 
+                : p.threshold;
             
             return `
-            <div class="plant-card" onclick='selectPlant(${JSON.stringify(p).replace(/'/g, "\\'")})'> 
-                ${deleteBtn}
-                <img src="${p.image}" alt="${p.name}" onerror="this.src='https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=400'">
-                <div class="plant-card-info">
-                    <h3>${p.name}</h3>
-                    <div class="plant-badges">
-                        <span class="rarity-badge ${p.rarity.toLowerCase()}">${p.rarity}</span>
-                        <span class="moisture-badge">${p.moisture} Moisture</span>
+                <div class="plant-card" onclick='selectPlant(${JSON.stringify(p).replace(/'/g, "\\'")})'> 
+                    ${deleteBtn}
+                    <img 
+                        src="${p.image}" 
+                        alt="${p.name}" 
+                        onerror="this.src='https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=400'"
+                    >
+                    <div class="plant-card-info">
+                        <h3>${p.name}</h3>
+                        <div class="plant-badges">
+                            <span class="rarity-badge ${p.rarity.toLowerCase()}">${p.rarity}</span>
+                            <span class="moisture-badge">${p.moisture} Moisture</span>
+                        </div>
+                        <p class="plant-threshold">${threshold.min}% - ${threshold.max}%</p>
                     </div>
-                    <p class="plant-threshold">${p.threshold.min}% - ${p.threshold.max}%</p>
                 </div>
-            </div>
-        `;
+            `;
         }).join('');
+        
+        console.log(`✅ Loaded ${filtered.length} plants (${defaultPlants?.length || 0} default, ${customPlantsData?.length || 0} custom)`);
+        
     } catch (err) {
         console.error('Error populating plants:', err);
+        grid.innerHTML = `<p style="color: red; grid-column: 1/-1; text-align: center;">Error loading plants: ${err.message}</p>`;
     }
 }
 
