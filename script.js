@@ -34,7 +34,6 @@ const PLANTS_DATABASE = [
     { name: 'Hoya Carnosa', rarity: 'Rare', moisture: 'Low', threshold: { min: 30, max: 50 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Hoya_Carnosa.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9Ib3lhX0Nhcm5vc2EucG5nIiwiaWF0IjoxNzY0MTgzNTUxLCJleHAiOjE3OTU3MTk1NTF9.7pRzRFTWegfnvjM5dXSgg5nj4l3btfgYIHWCJVPDrFY' }
 ];
 
-// STATE
 let chart, realtimeSubscription, liveDataInterval;
 let chartData = { labels: [], values: [] };
 let settings = {
@@ -351,6 +350,7 @@ function closeCalibration() {
     if (interval) clearInterval(parseInt(interval));
     document.getElementById('calibrationModal').style.display = 'none';
 }
+
 
 // Conversion
 function rawToPercentage(raw) {
