@@ -1,5 +1,4 @@
 // CONFIGURATION
-
 const CONFIG = {
     SUPABASE_URL: 'https://clluovsscjmlhcbvsgcz.supabase.co',
     SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsbHVvdnNzY2ptbGhjYnZzZ2N6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQwNjI5NTYsImV4cCI6MjA3OTYzODk1Nn0.5MDrr1886qiUCyCLUB2BxLBSviQ-Ehs47-CGJi_95C8',
@@ -19,7 +18,6 @@ const PLANTS_DATABASE = [
     { name: 'Peace Lily', rarity: 'Common', moisture: 'High', threshold: { min: 60, max: 80 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Peace_Lily.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9QZWFjZV9MaWx5LnBuZyIsImlhdCI6MTc2NDE4MzMzMywiZXhwIjoxNzk1NzE5MzMzfQ.OYeM4MR9v-owVi0JfXE-NoIrJ1P76Ydqb2rHdsq_J-s' },
     { name: 'ZZ Plant', rarity: 'Common', moisture: 'Low', threshold: { min: 20, max: 40 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/ZZ_plant.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9aWl9wbGFudC5wbmciLCJpYXQiOjE3NjQxODM0MTcsImV4cCI6MTc5NTcxOTQxN30.GKrEVbk9siWIsHqtdpT_iEJk4QFYavB6Hzj-M7pP7ws' },
     { name: 'Jade Plant', rarity: 'Common', moisture: 'Low', threshold: { min: 25, max: 40 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Jade_Plant.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9KYWRlX1BsYW50LnBuZyIsImlhdCI6MTc2NDE4MzQzMCwiZXhwIjoxNzk1NzE5NDMwfQ.q_R3d2P_hsPdBIHHu5f6akVEJhI4vH389FoQVLWvGJ4' },
-    
     // Uncommon Plants
     { name: 'Monstera Deliciosa', rarity: 'Uncommon', moisture: 'Medium', threshold: { min: 50, max: 70 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Monstera_Deliciosa.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9Nb25zdGVyYV9EZWxpY2lvc2EucG5nIiwiaWF0IjoxNzY0MTgzNDQwLCJleHAiOjE3OTU3MTk0NDB9.bDAi8kKgaSwckFPiqQsViLrPcDN3-Bs8ds310fKbTOk' },
     { name: 'Fiddle Leaf Fig', rarity: 'Uncommon', moisture: 'Medium', threshold: { min: 45, max: 65 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Fiddle_Leaf_Fig.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9GaWRkbGVfTGVhZl9GaWcucG5nIiwiaWF0IjoxNzY0MTgzNDQ5LCJleHAiOjE3OTU3MTk0NDl9.XjSFbc_Ul96u16lzAQNGH45XP1MUmVtheJ9csK6uNwk' },
@@ -27,7 +25,6 @@ const PLANTS_DATABASE = [
     { name: 'Calathea', rarity: 'Uncommon', moisture: 'High', threshold: { min: 65, max: 85 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Calathea.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9DYWxhdGhlYS5wbmciLCJpYXQiOjE3NjQxODM0NzcsImV4cCI6MTc5NTcxOTQ3N30.J8CK8H61EkAZzkVHq2Hnn2oUpLH4LgzJvYTL-AtIqJc' },
     { name: 'Boston Fern', rarity: 'Uncommon', moisture: 'High', threshold: { min: 70, max: 90 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Boston_Fern.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9Cb3N0b25fRmVybi5wbmciLCJpYXQiOjE3NjQxODM0ODgsImV4cCI6MTc5NTcxOTQ4OH0.gq6z-fjTlTpt-XDBWSJrTGYCGgobehwLy-ww-ZssDOk' },
     { name: 'Philodendron', rarity: 'Uncommon', moisture: 'Medium', threshold: { min: 45, max: 65 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Philodendron.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9QaGlsb2RlbmRyb24ucG5nIiwiaWF0IjoxNzY0MTgzNDk2LCJleHAiOjE3OTU3MTk0OTZ9.T7Dh3YoI5aWBqiSGgEMiLrHpAqAbmxbjbw7dg51da-8' },
-    
     // Rare Plants
     { name: 'Variegated Monstera', rarity: 'Rare', moisture: 'Medium', threshold: { min: 50, max: 70 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Variegated_Monstera.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9WYXJpZWdhdGVkX01vbnN0ZXJhLnBuZyIsImlhdCI6MTc2NDE4MzUwNiwiZXhwIjoxNzk1NzE5NTA2fQ.VKQtQ905lzVSaHIs6vnjCGPOAVl67JACYiOSX9zdiTg' },
     { name: 'Alocasia Polly', rarity: 'Rare', moisture: 'High', threshold: { min: 65, max: 85 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Alocasia_Polly.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9BbG9jYXNpYV9Qb2xseS5wbmciLCJpYXQiOjE3NjQxODM1MTUsImV4cCI6MTc5NTcxOTUxNX0.QaWkQEPqGnEjJz6ehdviHLj6HCWMIzCxbH_1rNv-4Ms' },
@@ -38,67 +35,45 @@ const PLANTS_DATABASE = [
 ];
 
 // STATE
-
-let chart = null;
-let realtimeSubscription = null;
-let liveDataInterval = null;
-let chartData = {
-    labels: [],
-    values: []
-};
+let chart, realtimeSubscription, liveDataInterval;
+let chartData = { labels: [], values: [] };
 let settings = {
     theme: 'light',
     timeRange: 24,
     notificationsEnabled: false,
-    calibration: {
-        dry: 3200,
-        wet: 1200
-    },
+    calibration: { dry: 3200, wet: 1200 },
     selectedPlant: null
 };
 let currentRawValue = 0;
 let lastNotificationTime = 0;
 
 // SUPABASE CLIENT
+const supabase = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
 
-const supabase = window.supabase.createClient(
-    CONFIG.SUPABASE_URL,
-    CONFIG.SUPABASE_ANON_KEY
-);
-
-// INITIALIZATION
-
+// INIT
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log('Initializing Soil Moisture Monitor...');
-    
     loadSettings();
     applyTheme();
     initChart();
     populatePlants();
-    
     await loadHistoricalData();
     setupRealtimeSubscription();
     startLiveDataFetch();
-    
     showPage('dashboard');
     
-    console.log('Initialization complete!');
+    const imgInput = document.getElementById('customPlantImage');
+    if (imgInput) imgInput.addEventListener('change', handleImagePreview);
 });
 
-// SETTINGS MANAGEMENT
-
+// Settings
 function loadSettings() {
     const saved = localStorage.getItem('moistureMonitorSettings');
     if (saved) {
         settings = { ...settings, ...JSON.parse(saved) };
-        
         document.getElementById('themeToggle').value = settings.theme;
         document.getElementById('timeRange').value = settings.timeRange;
         document.getElementById('notificationsEnabled').checked = settings.notificationsEnabled;
-        
-        if (settings.selectedPlant) {
-            displaySelectedPlant(settings.selectedPlant);
-        }
+        if (settings.selectedPlant) displaySelectedPlant(settings.selectedPlant);
     }
 }
 
@@ -109,80 +84,60 @@ function saveSettings() {
 function updateSettings() {
     settings.timeRange = parseInt(document.getElementById('timeRange').value);
     settings.notificationsEnabled = document.getElementById('notificationsEnabled').checked;
-    
     saveSettings();
     loadHistoricalData();
-    
-    console.log('Settings updated:', settings);
 }
 
 function resetSettings() {
-    if (confirm('Reset all settings to defaults?')) {
-        settings = {
-            theme: 'light',
-            timeRange: 24,
-            notificationsEnabled: false,
-            calibration: { dry: 3200, wet: 1200 },
-            selectedPlant: null
-        };
-        
-        saveSettings();
-        loadSettings();
-        applyTheme();
-        
-        document.getElementById('plantInfo').style.display = 'none';
-        document.getElementById('currentReadingCard').style.backgroundImage = '';
-        document.getElementById('currentReadingCard').style.background = 'var(--accent-gradient)';
-        
-        alert('Settings reset to defaults');
-    }
+    if (!confirm('Reset all settings to defaults?')) return;
+    settings = {
+        theme: 'light',
+        timeRange: 24,
+        notificationsEnabled: false,
+        calibration: { dry: 3200, wet: 1200 },
+        selectedPlant: null
+    };
+    saveSettings();
+    loadSettings();
+    applyTheme();
+    document.getElementById('plantInfo').style.display = 'none';
+    const card = document.getElementById('currentReadingCard');
+    card.style.backgroundImage = '';
+    card.style.background = 'var(--accent-gradient)';
+    alert('Settings reset');
 }
 
-// THEME MANAGEMENT
-
+// Theme
 function toggleTheme() {
-    const themeSelect = document.getElementById('themeToggle');
-    settings.theme = themeSelect.value;
+    settings.theme = document.getElementById('themeToggle').value;
     saveSettings();
     applyTheme();
 }
 
 function applyTheme() {
-    if (settings.theme === 'auto') {
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        document.body.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
-    } else {
-        document.body.setAttribute('data-theme', settings.theme);
-    }
-    
-    if (chart) {
-        updateChartTheme();
-    }
+    const theme = settings.theme === 'auto' 
+        ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+        : settings.theme;
+    document.body.setAttribute('data-theme', theme);
+    if (chart) updateChartTheme();
 }
 
 function updateChartTheme() {
     const isDark = document.body.getAttribute('data-theme') === 'dark';
-    
-    chart.options.scales.x.ticks.color = isDark ? '#e2e8f0' : '#4a5568';
-    chart.options.scales.y.ticks.color = isDark ? '#e2e8f0' : '#4a5568';
-    chart.options.scales.x.grid.color = isDark ? 'rgba(226, 232, 240, 0.1)' : 'rgba(0, 0, 0, 0.1)';
-    chart.options.scales.y.grid.color = isDark ? 'rgba(226, 232, 240, 0.1)' : 'rgba(0, 0, 0, 0.1)';
-    
+    const textColor = isDark ? '#e2e8f0' : '#4a5568';
+    const gridColor = isDark ? 'rgba(226, 232, 240, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+    chart.options.scales.x.ticks.color = textColor;
+    chart.options.scales.y.ticks.color = textColor;
+    chart.options.scales.x.grid.color = gridColor;
+    chart.options.scales.y.grid.color = gridColor;
     chart.update();
 }
 
-// PAGE NAVIGATION
-
-function showPage(pageName) {
-    document.querySelectorAll('.page').forEach(page => {
-        page.classList.remove('active');
-    });
-    
-    const page = document.getElementById(pageName + 'Page');
-    if (page) {
-        page.classList.add('active');
-    }
-    
+// Navigation
+function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const page = document.getElementById(name + 'Page');
+    if (page) page.classList.add('active');
     closeMenu();
 }
 
@@ -194,51 +149,36 @@ function closeMenu() {
     document.getElementById('menuOverlay').classList.remove('active');
 }
 
-document.getElementById('menuOverlay').addEventListener('click', (e) => {
-    if (e.target.id === 'menuOverlay') {
-        closeMenu();
-    }
-});
-
-// PLANT MANAGEMENT
-
+// Plants
 function populatePlants() {
     const grid = document.getElementById('plantsGrid');
-    grid.innerHTML = '';
+    if (!grid) return;
     
     let plants = [...PLANTS_DATABASE];
-    
     const filter = document.getElementById('plantFilter')?.value || 'all';
     
-    if (filter === 'az') {
-        plants.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (filter === 'rarity') {
-        const rarityOrder = { 'Common': 1, 'Uncommon': 2, 'Rare': 3 };
-        plants.sort((a, b) => rarityOrder[a.rarity] - rarityOrder[b.rarity]);
+    if (filter === 'az') plants.sort((a, b) => a.name.localeCompare(b.name));
+    else if (filter === 'rarity') {
+        const order = { Common: 1, Uncommon: 2, Rare: 3 };
+        plants.sort((a, b) => order[a.rarity] - order[b.rarity]);
     } else if (filter === 'moisture') {
-        const moistureOrder = { 'Low': 1, 'Medium': 2, 'High': 3 };
-        plants.sort((a, b) => moistureOrder[a.moisture] - moistureOrder[b.moisture]);
+        const order = { Low: 1, Medium: 2, High: 3 };
+        plants.sort((a, b) => order[a.moisture] - order[b.moisture]);
     }
     
-    plants.forEach(plant => {
-        const card = document.createElement('div');
-        card.className = 'plant-card';
-        card.onclick = () => selectPlant(plant);
-        
-        card.innerHTML = `
-            <img src="${plant.image}" alt="${plant.name}" onerror="this.src='https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=400'">
+    grid.innerHTML = plants.map(p => `
+        <div class="plant-card" onclick="selectPlant(${JSON.stringify(p).replace(/"/g, '&quot;')})">
+            <img src="${p.image}" alt="${p.name}" onerror="this.src='https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=400'">
             <div class="plant-card-info">
-                <h3>${plant.name}</h3>
+                <h3>${p.name}</h3>
                 <div class="plant-badges">
-                    <span class="rarity-badge ${plant.rarity.toLowerCase()}">${plant.rarity}</span>
-                    <span class="moisture-badge">${plant.moisture} Moisture</span>
+                    <span class="rarity-badge ${p.rarity.toLowerCase()}">${p.rarity}</span>
+                    <span class="moisture-badge">${p.moisture} Moisture</span>
                 </div>
-                <p class="plant-threshold">${plant.threshold.min}% - ${plant.threshold.max}%</p>
+                <p class="plant-threshold">${p.threshold.min}% - ${p.threshold.max}%</p>
             </div>
-        `;
-        
-        grid.appendChild(card);
-    });
+        </div>
+    `).join('');
 }
 
 function filterPlants() {
@@ -250,23 +190,17 @@ function selectPlant(plant) {
     saveSettings();
     displaySelectedPlant(plant);
     closePlantPanel();
-    
-    console.log('Selected plant:', plant);
 }
 
 function displaySelectedPlant(plant) {
     const card = document.getElementById('currentReadingCard');
-    const plantInfo = document.getElementById('plantInfo');
-    const plantName = document.getElementById('plantName');
-    const plantThreshold = document.getElementById('plantThreshold');
-    
     card.style.backgroundImage = `linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%), url('${plant.image}')`;
     card.style.backgroundSize = 'cover';
     card.style.backgroundPosition = 'center';
     
-    plantInfo.style.display = 'block';
-    plantName.textContent = plant.name;
-    plantThreshold.textContent = `Ideal: ${plant.threshold.min}% - ${plant.threshold.max}%`;
+    document.getElementById('plantInfo').style.display = 'block';
+    document.getElementById('plantName').textContent = plant.name;
+    document.getElementById('plantThreshold').textContent = `Ideal: ${plant.threshold.min}% - ${plant.threshold.max}%`;
 }
 
 function openPlantPanel() {
@@ -277,13 +211,61 @@ function closePlantPanel() {
     document.getElementById('plantPanel').classList.remove('active');
 }
 
-// CALIBRATION
+function switchTab(tab) {
+    document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    
+    event.target.classList.add('active');
+    document.getElementById(tab + 'Tab').classList.add('active');
+}
 
+function handleImagePreview(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const preview = document.getElementById('customImagePreview');
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+}
+
+function addCustomPlant() {
+    const name = document.getElementById('customPlantName').value;
+    const min = parseInt(document.getElementById('customPlantMinThreshold').value);
+    const max = parseInt(document.getElementById('customPlantMaxThreshold').value);
+    const preview = document.getElementById('customImagePreview');
+    
+    if (!name || !min || !max) {
+        alert('Please fill in all fields');
+        return;
+    }
+    
+    const plant = {
+        name,
+        rarity: 'Custom',
+        moisture: min < 35 ? 'Low' : (min < 55 ? 'Medium' : 'High'),
+        threshold: { min, max },
+        image: preview.src || 'https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=400'
+    };
+    
+    PLANTS_DATABASE.push(plant);
+    selectPlant(plant);
+    
+    // Reset form
+    document.getElementById('customPlantName').value = '';
+    document.getElementById('customPlantMinThreshold').value = '';
+    document.getElementById('customPlantMaxThreshold').value = '';
+    preview.style.display = 'none';
+}
+
+// Calibration
 function startCalibration() {
     document.getElementById('calibrationModal').style.display = 'flex';
+    document.querySelectorAll('.calibration-step').forEach(s => s.classList.remove('active'));
     document.getElementById('calibrationStep1').classList.add('active');
-    document.getElementById('calibrationStep2').classList.remove('active');
-    document.getElementById('calibrationStep3').classList.remove('active');
     
     const interval = setInterval(() => {
         document.getElementById('dryReading').textContent = currentRawValue;
@@ -296,7 +278,6 @@ function startCalibration() {
 function calibrateDry() {
     settings.calibration.dry = currentRawValue;
     document.getElementById('finalDry').textContent = currentRawValue;
-    
     document.getElementById('calibrationStep1').classList.remove('active');
     document.getElementById('calibrationStep2').classList.add('active');
 }
@@ -305,7 +286,6 @@ function calibrateWet() {
     settings.calibration.wet = currentRawValue;
     document.getElementById('finalWet').textContent = currentRawValue;
     saveSettings();
-    
     document.getElementById('calibrationStep2').classList.remove('active');
     document.getElementById('calibrationStep3').classList.add('active');
 }
@@ -313,20 +293,17 @@ function calibrateWet() {
 function closeCalibration() {
     const interval = document.getElementById('calibrationModal').dataset.interval;
     if (interval) clearInterval(parseInt(interval));
-    
     document.getElementById('calibrationModal').style.display = 'none';
 }
 
-// CONVERSION
-
-function rawToPercentage(rawValue) {
+// Conversion
+function rawToPercentage(raw) {
     const { dry, wet } = settings.calibration;
-    const percentage = ((dry - rawValue) / (dry - wet)) * 100;
-    return Math.max(0, Math.min(100, Math.round(percentage)));
+    const pct = ((dry - raw) / (dry - wet)) * 100;
+    return Math.max(0, Math.min(100, Math.round(pct)));
 }
 
-// DATA LOADING
-
+// Data
 async function loadHistoricalData() {
     try {
         updateConnectionStatus('connecting');
@@ -340,32 +317,19 @@ async function loadHistoricalData() {
             .gte('created_at', hoursAgo.toISOString())
             .order('created_at', { ascending: true });
         
-        if (error) {
-            console.error('Error loading data:', error);
-            updateConnectionStatus('disconnected');
-            return;
-        }
-        
-        console.log(`Loaded ${data.length} historical readings`);
+        if (error) throw error;
         
         chartData.labels = [];
         chartData.values = [];
         
-        const filteredData = [];
-        let lastTimestamp = 0;
-        
-        data.forEach(reading => {
-            const timestamp = new Date(reading.created_at).getTime();
-            if (timestamp - lastTimestamp >= CONFIG.CHART_DATA_INTERVAL) {
-                filteredData.push(reading);
-                lastTimestamp = timestamp;
+        let lastTime = 0;
+        data.forEach(r => {
+            const time = new Date(r.created_at).getTime();
+            if (time - lastTime >= CONFIG.CHART_DATA_INTERVAL) {
+                chartData.labels.push(formatTime(new Date(r.created_at)));
+                chartData.values.push(rawToPercentage(r.value));
+                lastTime = time;
             }
-        });
-        
-        filteredData.forEach(reading => {
-            const timestamp = new Date(reading.created_at);
-            chartData.labels.push(formatTime(timestamp));
-            chartData.values.push(rawToPercentage(reading.value));
         });
         
         updateChart();
@@ -377,9 +341,8 @@ async function loadHistoricalData() {
         }
         
         updateConnectionStatus('connected');
-        
     } catch (err) {
-        console.error('Failed to load data:', err);
+        console.error('Load error:', err);
         updateConnectionStatus('disconnected');
     }
 }
@@ -387,109 +350,85 @@ async function loadHistoricalData() {
 function startLiveDataFetch() {
     liveDataInterval = setInterval(async () => {
         try {
-            const { data, error } = await supabase
+            const { data } = await supabase
                 .from(CONFIG.TABLE_NAME)
                 .select('value, created_at')
                 .order('created_at', { ascending: false })
                 .limit(1);
             
-            if (!error && data.length > 0) {
-                const latest = data[0];
-                currentRawValue = latest.value;
-                updateCurrentValue(rawToPercentage(latest.value), new Date(latest.created_at));
-                checkThreshold(rawToPercentage(latest.value));
+            if (data?.length) {
+                currentRawValue = data[0].value;
+                const pct = rawToPercentage(data[0].value);
+                updateCurrentValue(pct, new Date(data[0].created_at));
+                checkThreshold(pct);
             }
         } catch (err) {
-            console.error('Error fetching live data:', err);
+            console.error('Fetch error:', err);
         }
     }, CONFIG.LIVE_REFRESH_INTERVAL);
 }
 
-// REALTIME SUBSCRIPTION
-
 function setupRealtimeSubscription() {
-    console.log('Setting up realtime subscription...');
-    
     realtimeSubscription = supabase
-        .channel('moisture_readings_changes')
-        .on(
-            'postgres_changes',
-            {
-                event: 'INSERT',
-                schema: 'public',
-                table: CONFIG.TABLE_NAME
-            },
-            (payload) => {
-                console.log('New reading received:', payload);
-                handleNewReading(payload.new);
-            }
-        )
+        .channel('moisture_changes')
+        .on('postgres_changes', {
+            event: 'INSERT',
+            schema: 'public',
+            table: CONFIG.TABLE_NAME
+        }, (payload) => handleNewReading(payload.new))
         .subscribe((status) => {
-            console.log('Subscription status:', status);
-            if (status === 'SUBSCRIBED') {
-                updateConnectionStatus('connected');
-            }
+            if (status === 'SUBSCRIBED') updateConnectionStatus('connected');
         });
 }
 
 function handleNewReading(reading) {
-    const timestamp = new Date(reading.created_at);
-    const percentage = rawToPercentage(reading.value);
+    const time = new Date(reading.created_at);
+    const pct = rawToPercentage(reading.value);
     
-    const lastChartTime = chartData.labels.length > 0 ? 
+    const lastTime = chartData.labels.length > 0 ? 
         new Date(`${new Date().toDateString()} ${chartData.labels[chartData.labels.length - 1]}`).getTime() : 0;
-    const currentTime = timestamp.getTime();
     
-    if (currentTime - lastChartTime >= CONFIG.CHART_DATA_INTERVAL) {
-        const timeLabel = formatTime(timestamp);
-        chartData.labels.push(timeLabel);
-        chartData.values.push(percentage);
-        
+    if (time.getTime() - lastTime >= CONFIG.CHART_DATA_INTERVAL) {
+        chartData.labels.push(formatTime(time));
+        chartData.values.push(pct);
         updateChart();
     }
     
     currentRawValue = reading.value;
-    updateCurrentValue(percentage, timestamp);
-    checkThreshold(percentage);
+    updateCurrentValue(pct, time);
+    checkThreshold(pct);
     flashNewData();
 }
 
-// THRESHOLD CHECKING
-
-function checkThreshold(currentPercentage) {
+function checkThreshold(pct) {
     if (!settings.notificationsEnabled || !settings.selectedPlant) return;
     
     const now = Date.now();
     if (now - lastNotificationTime < 300000) return;
     
-    const plant = settings.selectedPlant;
+    const { name, threshold } = settings.selectedPlant;
     
-    if (currentPercentage < plant.threshold.min) {
-        showNotification(`${plant.name} needs water!`, `Moisture is at ${currentPercentage}%, below ${plant.threshold.min}%`);
+    if (pct < threshold.min) {
+        showNotification(`${name} needs water!`, `Moisture at ${pct}%, below ${threshold.min}%`);
         lastNotificationTime = now;
-    } else if (currentPercentage > plant.threshold.max) {
-        showNotification(`${plant.name} too wet!`, `Moisture is at ${currentPercentage}%, above ${plant.threshold.max}%`);
+    } else if (pct > threshold.max) {
+        showNotification(`${name} too wet!`, `Moisture at ${pct}%, above ${threshold.max}%`);
         lastNotificationTime = now;
     }
 }
 
-function showNotification(title, message) {
+function showNotification(title, msg) {
     if ('Notification' in window) {
-        Notification.requestPermission().then(permission => {
-            if (permission === 'granted') {
-                new Notification(title, { body: message, icon: '🌱' });
-            }
+        Notification.requestPermission().then(p => {
+            if (p === 'granted') new Notification(title, { body: msg, icon: '🌱' });
         });
     }
-    
-    alert(`${title}\n${message}`);
+    alert(`${title}\n${msg}`);
 }
 
-// CHART MANAGEMENT
-
+// Chart
 function initChart() {
     const ctx = document.getElementById('moistureChart').getContext('2d');
-    
     const isDark = document.body.getAttribute('data-theme') === 'dark';
     const textColor = isDark ? '#e2e8f0' : '#4a5568';
     const gridColor = isDark ? 'rgba(226, 232, 240, 0.1)' : 'rgba(0, 0, 0, 0.1)';
@@ -499,81 +438,45 @@ function initChart() {
         data: {
             labels: [],
             datasets: [{
-                label: 'Moisture Level',
+                label: 'Moisture',
                 data: [],
                 borderColor: '#667eea',
                 backgroundColor: 'rgba(102, 126, 234, 0.1)',
                 borderWidth: 2,
                 fill: true,
-                tension: 0.4,
-                pointRadius: 3,
-                pointHoverRadius: 6,
-                pointBackgroundColor: '#667eea',
-                pointBorderColor: '#fff',
-                pointBorderWidth: 2
+                tension: 0.4
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            interaction: {
-                intersect: false,
-                mode: 'index'
-            },
             plugins: {
-                legend: {
-                    display: false
-                },
+                legend: { display: false },
                 tooltip: {
                     backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                    titleColor: '#fff',
-                    bodyColor: '#fff',
-                    borderColor: '#667eea',
-                    borderWidth: 1,
-                    padding: 12,
-                    displayColors: false,
                     callbacks: {
-                        label: function(context) {
-                            return `Moisture: ${context.parsed.y}%`;
-                        }
+                        label: (ctx) => `Moisture: ${ctx.parsed.y}%`
                     }
                 }
             },
             scales: {
-                x: {
-                    ticks: {
-                        color: textColor,
-                        maxRotation: 45,
-                        minRotation: 45
-                    },
-                    grid: {
-                        color: gridColor
-                    }
-                },
+                x: { ticks: { color: textColor }, grid: { color: gridColor } },
                 y: {
                     min: 0,
                     max: 100,
                     ticks: {
                         color: textColor,
-                        callback: function(value) {
-                            return value + '%';
-                        }
+                        callback: (v) => v + '%'
                     },
-                    grid: {
-                        color: gridColor
-                    }
+                    grid: { color: gridColor }
                 }
-            },
-            animation: {
-                duration: 750
             }
         }
     });
 }
 
 function updateChart() {
-    if (!chart) chart = new Chart();
-    
+    if (!chart) return;
     chart.data.labels = chartData.labels;
     chart.data.datasets[0].data = chartData.values;
     chart.update('none');
@@ -585,92 +488,65 @@ function changeTimeRange() {
     loadHistoricalData();
 }
 
-// UI UPDATES
-
-function updateCurrentValue(percentage, timestamp) {
-    const valueElement = document.querySelector('.current-value .value');
-    if (valueElement) {
-        valueElement.textContent = percentage;
-    }
+// UI Updates
+function updateCurrentValue(pct, time) {
+    const val = document.querySelector('.current-value .value');
+    if (val) val.textContent = pct;
     
-    const updateElement = document.getElementById('lastUpdate');
-    if (updateElement) {
-        updateElement.textContent = `Updated ${formatTimeAgo(timestamp)}`;
-    }
+    const upd = document.getElementById('lastUpdate');
+    if (upd) upd.textContent = `Updated ${formatTimeAgo(time)}`;
     
-    const indicatorFill = document.getElementById('indicatorFill');
-    if (indicatorFill) {
-        indicatorFill.style.width = `${percentage}%`;
-    }
+    const fill = document.getElementById('indicatorFill');
+    if (fill) fill.style.width = `${pct}%`;
 }
 
 function updateConnectionStatus(status) {
-    const statusDot = document.querySelector('.status-dot');
-    const statusText = document.getElementById('statusText');
+    const dot = document.querySelector('.status-dot');
+    const txt = document.getElementById('statusText');
+    if (!dot || !txt) return;
     
-    if (!statusDot || !statusText) return;
-    
-    statusDot.className = 'status-dot';
-    
-    switch (status) {
-        case 'connected':
-            statusDot.classList.add('connected');
-            statusText.textContent = 'Connected';
-            break;
-        case 'connecting':
-            statusText.textContent = 'Connecting...';
-            break;
-        case 'disconnected':
-            statusDot.classList.add('disconnected');
-            statusText.textContent = 'Disconnected';
-            break;
+    dot.className = 'status-dot';
+    if (status === 'connected') {
+        dot.classList.add('connected');
+        txt.textContent = 'Connected';
+    } else if (status === 'disconnected') {
+        dot.classList.add('disconnected');
+        txt.textContent = 'Disconnected';
+    } else {
+        txt.textContent = 'Connecting...';
     }
 }
 
 function flashNewData() {
-    const currentValue = document.querySelector('.current-value');
-    if (currentValue) {
-        currentValue.style.transform = 'scale(1.05)';
-        setTimeout(() => {
-            currentValue.style.transform = 'scale(1)';
-        }, 300);
+    const val = document.querySelector('.current-value');
+    if (val) {
+        val.style.transform = 'scale(1.05)';
+        setTimeout(() => val.style.transform = 'scale(1)', 300);
     }
 }
 
-// UTILITY FUNCTIONS
-
-function formatTime(date) {
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    return `${hours}:${minutes}`;
+// Utils
+function formatTime(d) {
+    return `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
 }
 
-function formatTimeAgo(date) {
-    const seconds = Math.floor((new Date() - date) / 1000);
-    
-    if (seconds < 60) return 'just now';
-    if (seconds < 120) return '1 minute ago';
-    if (seconds < 3600) return `${Math.floor(seconds / 60)} minutes ago`;
-    if (seconds < 7200) return '1 hour ago';
-    if (seconds < 86400) return `${Math.floor(seconds / 3600)} hours ago`;
-    return date.toLocaleDateString();
+function formatTimeAgo(d) {
+    const sec = Math.floor((new Date() - d) / 1000);
+    if (sec < 60) return 'just now';
+    if (sec < 120) return '1 minute ago';
+    if (sec < 3600) return `${Math.floor(sec / 60)} minutes ago`;
+    if (sec < 7200) return '1 hour ago';
+    if (sec < 86400) return `${Math.floor(sec / 3600)} hours ago`;
+    return d.toLocaleDateString();
 }
 
-// AUTO THEME DETECTION
-
+// Auto theme
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    if (settings.theme === 'auto') {
-        applyTheme();
-    }
+    if (settings.theme === 'auto') applyTheme();
 });
 
-// CLEANUP ON PAGE UNLOAD
-
+// Cleanup
 window.addEventListener('beforeunload', () => {
-    if (realtimeSubscription) {
-        supabase.removeChannel(realtimeSubscription);
-    }
-    if (liveDataInterval) {
-        clearInterval(liveDataInterval);
-    }
+    if (realtimeSubscription) supabase.removeChannel(realtimeSubscription);
+    if (liveDataInterval) clearInterval(liveDataInterval);
 });
