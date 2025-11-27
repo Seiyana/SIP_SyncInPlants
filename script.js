@@ -3,13 +3,38 @@ const CONFIG = {
     SUPABASE_URL: 'https://clluovsscjmlhcbvsgcz.supabase.co',
     SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsbHVvdnNzY2ptbGhjYnZzZ2N6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQwNjI5NTYsImV4cCI6MjA3OTYzODk1Nn0.5MDrr1886qiUCyCLUB2BxLBSviQ-Ehs47-CGJi_95C8',
     TABLE_NAME: 'moisture_readings',
-    CUSTOM_PLANTS_TABLE: 'custom_plants',
-    PLANTS_BUCKET: 'plant-images',
     LIVE_REFRESH_INTERVAL: 3000,
     CHART_DATA_INTERVAL: 600000,
     TIME_RANGE_HOURS: 24
 };
 
+// PLANT DATABASE
+const PLANTS_DATABASE = [
+    // Common Plants
+    { name: 'Snake Plant', rarity: 'Common', moisture: 'Low', threshold: { min: 20, max: 40 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Snake_Plant.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9TbmFrZV9QbGFudC5wbmciLCJpYXQiOjE3NjQxODMyMTIsImV4cCI6MTc5NTcxOTIxMn0.mMhWuc5qUFIZ9XDbn-9NuU5Hp_-SueFrTwjHi2_JyQ4' },
+    { name: 'Pothos', rarity: 'Common', moisture: 'Medium', threshold: { min: 40, max: 60 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Pothos.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9Qb3Rob3MucG5nIiwiaWF0IjoxNzY0MTgzMjQ5LCJleHAiOjE3OTU3MTkyNDl9.4T6tl4f_JVodFQ8GtuIzQ8B7qy50Kc6CmCcIR2EBVGs' },
+    { name: 'Spider Plant', rarity: 'Common', moisture: 'Medium', threshold: { min: 40, max: 60 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Spider_Plant.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9TcGlkZXJfUGxhbnQucG5nIiwiaWF0IjoxNzY0MTgzMjg2LCJleHAiOjE3OTU3MTkyODZ9.aYzrtDMURW2eYbjwDzfoHAcFFcjgu8x07VlzjQZWM64' },
+    { name: 'Aloe Vera', rarity: 'Common', moisture: 'Low', threshold: { min: 20, max: 35 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Aloe_Vera.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9BbG9lX1ZlcmEucG5nIiwiaWF0IjoxNzY0MTgzMzExLCJleHAiOjE3OTU3MTkzMTF9.VP0U4yJh289w7SbVKxHdP9EMAkJJcSTMuOi1XOoUnzE' },
+    { name: 'Peace Lily', rarity: 'Common', moisture: 'High', threshold: { min: 60, max: 80 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Peace_Lily.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9QZWFjZV9MaWx5LnBuZyIsImlhdCI6MTc2NDE4MzMzMywiZXhwIjoxNzk1NzE5MzMzfQ.OYeM4MR9v-owVi0JfXE-NoIrJ1P76Ydqb2rHdsq_J-s' },
+    { name: 'ZZ Plant', rarity: 'Common', moisture: 'Low', threshold: { min: 20, max: 40 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/ZZ_plant.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9aWl9wbGFudC5wbmciLCJpYXQiOjE3NjQxODM0MTcsImV4cCI6MTc5NTcxOTQxN30.GKrEVbk9siWIsHqtdpT_iEJk4QFYavB6Hzj-M7pP7ws' },
+    { name: 'Jade Plant', rarity: 'Common', moisture: 'Low', threshold: { min: 25, max: 40 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Jade_Plant.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9KYWRlX1BsYW50LnBuZyIsImlhdCI6MTc2NDE4MzQzMCwiZXhwIjoxNzk1NzE5NDMwfQ.q_R3d2P_hsPdBIHHu5f6akVEJhI4vH389FoQVLWvGJ4' },
+    // Uncommon Plants
+    { name: 'Monstera Deliciosa', rarity: 'Uncommon', moisture: 'Medium', threshold: { min: 50, max: 70 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Monstera_Deliciosa.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9Nb25zdGVyYV9EZWxpY2lvc2EucG5nIiwiaWF0IjoxNzY0MTgzNDQwLCJleHAiOjE3OTU3MTk0NDB9.bDAi8kKgaSwckFPiqQsViLrPcDN3-Bs8ds310fKbTOk' },
+    { name: 'Fiddle Leaf Fig', rarity: 'Uncommon', moisture: 'Medium', threshold: { min: 45, max: 65 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Fiddle_Leaf_Fig.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9GaWRkbGVfTGVhZl9GaWcucG5nIiwiaWF0IjoxNzY0MTgzNDQ5LCJleHAiOjE3OTU3MTk0NDl9.XjSFbc_Ul96u16lzAQNGH45XP1MUmVtheJ9csK6uNwk' },
+    { name: 'Rubber Plant', rarity: 'Uncommon', moisture: 'Medium', threshold: { min: 40, max: 60 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Rubber_Plant.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9SdWJiZXJfUGxhbnQucG5nIiwiaWF0IjoxNzY0MTgzNDYxLCJleHAiOjE3OTU3MTk0NjF9.zhE1Ci0-C93YPch4K2RyE_DoHPIvpKipNbsTtIZvb1w' },
+    { name: 'Calathea', rarity: 'Uncommon', moisture: 'High', threshold: { min: 65, max: 85 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Calathea.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9DYWxhdGhlYS5wbmciLCJpYXQiOjE3NjQxODM0NzcsImV4cCI6MTc5NTcxOTQ3N30.J8CK8H61EkAZzkVHq2Hnn2oUpLH4LgzJvYTL-AtIqJc' },
+    { name: 'Boston Fern', rarity: 'Uncommon', moisture: 'High', threshold: { min: 70, max: 90 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Boston_Fern.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9Cb3N0b25fRmVybi5wbmciLCJpYXQiOjE3NjQxODM0ODgsImV4cCI6MTc5NTcxOTQ4OH0.gq6z-fjTlTpt-XDBWSJrTGYCGgobehwLy-ww-ZssDOk' },
+    { name: 'Philodendron', rarity: 'Uncommon', moisture: 'Medium', threshold: { min: 45, max: 65 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Philodendron.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9QaGlsb2RlbmRyb24ucG5nIiwiaWF0IjoxNzY0MTgzNDk2LCJleHAiOjE3OTU3MTk0OTZ9.T7Dh3YoI5aWBqiSGgEMiLrHpAqAbmxbjbw7dg51da-8' },
+    // Rare Plants
+    { name: 'Variegated Monstera', rarity: 'Rare', moisture: 'Medium', threshold: { min: 50, max: 70 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Variegated_Monstera.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9WYXJpZWdhdGVkX01vbnN0ZXJhLnBuZyIsImlhdCI6MTc2NDE4MzUwNiwiZXhwIjoxNzk1NzE5NTA2fQ.VKQtQ905lzVSaHIs6vnjCGPOAVl67JACYiOSX9zdiTg' },
+    { name: 'Alocasia Polly', rarity: 'Rare', moisture: 'High', threshold: { min: 65, max: 85 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Alocasia_Polly.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9BbG9jYXNpYV9Qb2xseS5wbmciLCJpYXQiOjE3NjQxODM1MTUsImV4cCI6MTc5NTcxOTUxNX0.QaWkQEPqGnEjJz6ehdviHLj6HCWMIzCxbH_1rNv-4Ms' },
+    { name: 'String of Hearts', rarity: 'Rare', moisture: 'Low', threshold: { min: 25, max: 45 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/String_of_Hearts.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9TdHJpbmdfb2ZfSGVhcnRzLnBuZyIsImlhdCI6MTc2NDE4MzUyNCwiZXhwIjoxNzk1NzE5NTI0fQ.Src9ZTRM8nDqSm8F7WcdNAd4X2-3jzGwDl-qqH_aqaI' },
+    { name: 'Pink Princess Philodendron', rarity: 'Rare', moisture: 'Medium', threshold: { min: 50, max: 70 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Pink_Princess_Philodendron.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9QaW5rX1ByaW5jZXNzX1BoaWxvZGVuZHJvbi5wbmciLCJpYXQiOjE3NjQxODM1MzUsImV4cCI6MTc5NTcxOTUzNX0.QqjwUBdl9gQ-AFQequHPlC1poWQXzd4ughDpw67c85k' },
+    { name: 'Anthurium Clarinervium', rarity: 'Rare', moisture: 'High', threshold: { min: 60, max: 80 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Anthurium_Clarinervium.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9BbnRodXJpdW1fQ2xhcmluZXJ2aXVtLnBuZyIsImlhdCI6MTc2NDE4MzU0MywiZXhwIjoxNzk1NzE5NTQzfQ.vArQ6vsMQQ5wBOegLfEEfj-2Z1xXyT7_EKjH7keMej8' },
+    { name: 'Hoya Carnosa', rarity: 'Rare', moisture: 'Low', threshold: { min: 30, max: 50 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/SIP_Assets/Plants/Hoya_Carnosa.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTSVBfQXNzZXRzL1BsYW50cy9Ib3lhX0Nhcm5vc2EucG5nIiwiaWF0IjoxNzY0MTgzNTUxLCJleHAiOjE3OTU3MTk1NTF9.7pRzRFTWegfnvjM5dXSgg5nj4l3btfgYIHWCJVPDrFY' }
+];
+
+// STATE
 let chart, realtimeSubscription, liveDataInterval;
 let chartData = { labels: [], values: [] };
 let settings = {
@@ -17,11 +42,11 @@ let settings = {
     timeRange: 24,
     notificationsEnabled: false,
     calibration: { dry: 3200, wet: 1200 },
-    selectedPlant: null
+    selectedPlant: null,
+    customPlants: []
 };
 let currentRawValue = 0;
 let lastNotificationTime = 0;
-let customPlants = [];
 
 // SUPABASE CLIENT
 const supabase = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
@@ -31,8 +56,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadSettings();
     applyTheme();
     initChart();
-    await loadCustomPlants();
-    await populatePlants();
+    populatePlants();
     await loadHistoricalData();
     setupRealtimeSubscription();
     startLiveDataFetch();
@@ -47,6 +71,12 @@ function loadSettings() {
     const saved = localStorage.getItem('moistureMonitorSettings');
     if (saved) {
         settings = { ...settings, ...JSON.parse(saved) };
+        
+        // Load custom plants
+        if (settings.customPlants && settings.customPlants.length > 0) {
+            PLANTS_DATABASE.push(...settings.customPlants);
+        }
+        
         document.getElementById('themeToggle').value = settings.theme;
         document.getElementById('timeRange').value = settings.timeRange;
         document.getElementById('notificationsEnabled').checked = settings.notificationsEnabled;
@@ -67,23 +97,26 @@ function updateSettings() {
 
 function resetSettings() {
     if (!confirm('Reset all settings to defaults?')) return;
-<<<<<<< HEAD
-<<<<<<< HEAD
     
-=======
->>>>>>> parent of dd6e02b (v5)
-=======
->>>>>>> parent of dd6e02b (v5)
+    // Remove custom plants from database
+    const customPlants = settings.customPlants || [];
+    customPlants.forEach(cp => {
+        const idx = PLANTS_DATABASE.findIndex(p => p.name === cp.name && p.rarity === 'Custom');
+        if (idx > -1) PLANTS_DATABASE.splice(idx, 1);
+    });
+    
     settings = {
         theme: 'light',
         timeRange: 24,
         notificationsEnabled: false,
         calibration: { dry: 3200, wet: 1200 },
-        selectedPlant: null
+        selectedPlant: null,
+        customPlants: []
     };
     saveSettings();
     loadSettings();
     applyTheme();
+    populatePlants();
     document.getElementById('plantInfo').style.display = 'none';
     const card = document.getElementById('currentReadingCard');
     card.style.backgroundImage = '';
@@ -108,8 +141,8 @@ function applyTheme() {
 
 function updateChartTheme() {
     const isDark = document.body.getAttribute('data-theme') === 'dark';
-    const textColor = isDark ? '#e2e8f0' : '#4a5568';
-    const gridColor = isDark ? 'rgba(226, 232, 240, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+    const textColor = isDark ? '#f0f5f4' : '#0a0f0e';
+    const gridColor = isDark ? 'rgba(240, 245, 244, 0.1)' : 'rgba(10, 15, 14, 0.1)';
     chart.options.scales.x.ticks.color = textColor;
     chart.options.scales.y.ticks.color = textColor;
     chart.options.scales.x.grid.color = gridColor;
@@ -133,115 +166,30 @@ function closeMenu() {
     document.getElementById('menuOverlay').classList.remove('active');
 }
 
-// Custom Plants - Load from Supabase
-async function loadCustomPlants() {
-    try {
-        const { data, error } = await supabase
-            .from(CONFIG.CUSTOM_PLANTS_TABLE)
-            .select('*')
-            .order('created_at', { ascending: false });
-        
-        if (error) throw error;
-        customPlants = data || [];
-    } catch (err) {
-        console.error('Error loading custom plants:', err);
-        customPlants = [];
-    }
-}
-
-async function populatePlants() {
+// Plants
+function populatePlants() {
     const grid = document.getElementById('plantsGrid');
     if (!grid) return;
     
-<<<<<<< HEAD
-    try {
-        // Fetch both default and custom plants from Supabase
-        const { data: defaultPlants, error: defaultError } = await supabase
-            .from('default_plants')
-            .select('*')
-            .order('name', { ascending: true });
-        
-        if (defaultError && defaultError.code !== 'PGRST116') throw defaultError;
-        
-        const { data: customPlantsData, error: customError } = await supabase
-            .from('custom_plants')
-            .select('*')
-            .order('created_at', { ascending: false });
-        
-        if (customError && customError.code !== 'PGRST116') throw customError;
-        
-        // Combine all plants
-        const allPlants = [...(defaultPlants || []), ...(customPlantsData || [])];
-        
-        // Get filter value
-        const filter = document.getElementById('plantFilter')?.value || 'all';
-        
-        // Apply filters and sorting
-        let filtered = [...allPlants];
-        
-        if (filter === 'az') {
-            filtered.sort((a, b) => a.name.localeCompare(b.name));
-        } else if (filter === 'rarity') {
-            const order = { Common: 1, Uncommon: 2, Rare: 3, Custom: 4 };
-            filtered.sort((a, b) => (order[a.rarity] || 5) - (order[b.rarity] || 5));
-        } else if (filter === 'moisture') {
-            const order = { Low: 1, Medium: 2, High: 3 };
-            filtered.sort((a, b) => (order[a.moisture] || 5) - (order[b.moisture] || 5));
-        }
-        
-        // Generate HTML for plant cards
-        grid.innerHTML = filtered.map(p => {
-            const isCustom = p.rarity === 'Custom';
-            const deleteBtn = isCustom 
-                ? `<button class="delete-plant-btn" onclick="event.stopPropagation(); deletePlant(${p.id})">×</button>` 
-                : '';
-            
-            // Parse threshold if it's a string (from database)
-            const threshold = typeof p.threshold === 'string' 
-                ? JSON.parse(p.threshold) 
-                : p.threshold;
-            
-            return `
-                <div class="plant-card" onclick='selectPlant(${JSON.stringify(p).replace(/'/g, "\\'")})'> 
-                    ${deleteBtn}
-                    <img 
-                        src="${p.image}" 
-                        alt="${p.name}" 
-                        onerror="this.src='https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=400'"
-                    >
-                    <div class="plant-card-info">
-                        <h3>${p.name}</h3>
-                        <div class="plant-badges">
-                            <span class="rarity-badge ${p.rarity.toLowerCase()}">${p.rarity}</span>
-                            <span class="moisture-badge">${p.moisture} Moisture</span>
-                        </div>
-                        <p class="plant-threshold">${threshold.min}% - ${threshold.max}%</p>
-                    </div>
-                </div>
-            `;
-        }).join('');
-        
-        console.log(`✅ Loaded ${filtered.length} plants (${defaultPlants?.length || 0} default, ${customPlantsData?.length || 0} custom)`);
-        
-    } catch (err) {
-        console.error('Error populating plants:', err);
-        grid.innerHTML = `<p style="color: red; grid-column: 1/-1; text-align: center;">Error loading plants: ${err.message}</p>`;
-    }
-=======
     let plants = [...PLANTS_DATABASE];
     const filter = document.getElementById('plantFilter')?.value || 'all';
     
     if (filter === 'az') plants.sort((a, b) => a.name.localeCompare(b.name));
     else if (filter === 'rarity') {
-        const order = { Common: 1, Uncommon: 2, Rare: 3 };
+        const order = { Common: 1, Uncommon: 2, Rare: 3, Custom: 4 };
         plants.sort((a, b) => order[a.rarity] - order[b.rarity]);
     } else if (filter === 'moisture') {
         const order = { Low: 1, Medium: 2, High: 3 };
         plants.sort((a, b) => order[a.moisture] - order[b.moisture]);
     }
     
-    grid.innerHTML = plants.map(p => `
-        <div class="plant-card" onclick="selectPlant(${JSON.stringify(p).replace(/"/g, '&quot;')})">
+    grid.innerHTML = plants.map(p => {
+        const isCustom = p.rarity === 'Custom';
+        const deleteBtn = isCustom ? `<button class="delete-plant-btn" onclick="event.stopPropagation(); deletePlant('${p.name}')">×</button>` : '';
+        
+        return `
+        <div class="plant-card" onclick='selectPlant(${JSON.stringify(p).replace(/'/g, "\\'")})'> 
+            ${deleteBtn}
             <img src="${p.image}" alt="${p.name}" onerror="this.src='https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=400'">
             <div class="plant-card-info">
                 <h3>${p.name}</h3>
@@ -252,11 +200,8 @@ async function populatePlants() {
                 <p class="plant-threshold">${p.threshold.min}% - ${p.threshold.max}%</p>
             </div>
         </div>
-    `).join('');
-<<<<<<< HEAD
->>>>>>> parent of dd6e02b (v5)
-=======
->>>>>>> parent of dd6e02b (v5)
+    `;
+    }).join('');
 }
 
 function filterPlants() {
@@ -272,7 +217,7 @@ function selectPlant(plant) {
 
 function displaySelectedPlant(plant) {
     const card = document.getElementById('currentReadingCard');
-    card.style.backgroundImage = `linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%), url('${plant.image}')`;
+    card.style.backgroundImage = `linear-gradient(135deg, rgba(95, 171, 149, 0.9) 0%, rgba(126, 200, 180, 0.9) 100%), url('${plant.image}')`;
     card.style.backgroundSize = 'cover';
     card.style.backgroundPosition = 'center';
     
@@ -310,130 +255,33 @@ function handleImagePreview(e) {
     reader.readAsDataURL(file);
 }
 
-// Add Custom Plant - Save to Supabase
-async function addCustomPlant() {
+function addCustomPlant() {
     const name = document.getElementById('customPlantName').value;
     const min = parseInt(document.getElementById('customPlantMinThreshold').value);
     const max = parseInt(document.getElementById('customPlantMaxThreshold').value);
-    const imageFile = document.getElementById('customPlantImage').files[0];
+    const preview = document.getElementById('customImagePreview');
     
     if (!name || !min || !max) {
         alert('Please fill in all fields');
         return;
     }
     
-    if (!imageFile) {
-        alert('Please upload an image');
-        return;
-    }
+    const plant = {
+        name,
+        rarity: 'Custom',
+        moisture: min < 35 ? 'Low' : (min < 55 ? 'Medium' : 'High'),
+        threshold: { min, max },
+        image: preview.src || 'https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=400'
+    };
     
-<<<<<<< HEAD
-<<<<<<< HEAD
-    try {
-        // Show loading state
-        const btn = event.target;
-        const originalText = btn.textContent;
-        btn.textContent = 'Uploading...';
-        btn.disabled = true;
-        
-        // Upload image to Supabase bucket
-        const timestamp = Date.now();
-        const fileName = `${timestamp}_${imageFile.name}`;
-        
-        const { data: uploadData, error: uploadError } = await supabase.storage
-            .from(CONFIG.PLANTS_BUCKET)
-            .upload(fileName, imageFile);
-        
-        if (uploadError) throw uploadError;
-        
-        // Get public URL
-        const { data: publicUrlData } = supabase.storage
-            .from(CONFIG.PLANTS_BUCKET)
-            .getPublicUrl(fileName);
-        
-        const imageUrl = publicUrlData.publicUrl;
-        
-        // Save plant to Supabase
-        const plant = {
-            name,
-            rarity: 'Custom',
-            moisture: min < 35 ? 'Low' : (min < 55 ? 'Medium' : 'High'),
-            threshold: { min, max },
-            image: imageUrl
-        };
-        
-        const { data: dbData, error: dbError } = await supabase
-            .from(CONFIG.CUSTOM_PLANTS_TABLE)
-            .insert([plant])
-            .select();
-        
-        if (dbError) throw dbError;
-        
-        // Add to local customPlants array
-        if (dbData && dbData.length > 0) {
-            customPlants.push(dbData[0]);
-        }
-        
-        // Select the new plant
-        selectPlant(plant);
-        await populatePlants();
-        
-        // Reset form
-        document.getElementById('customPlantName').value = '';
-        document.getElementById('customPlantMinThreshold').value = '';
-        document.getElementById('customPlantMaxThreshold').value = '';
-        document.getElementById('customPlantImage').value = '';
-        document.getElementById('customImagePreview').style.display = 'none';
-        
-        alert('Plant added successfully!');
-        btn.textContent = originalText;
-        btn.disabled = false;
-        
-    } catch (err) {
-        console.error('Error adding plant:', err);
-        alert('Error adding plant: ' + err.message);
-        btn.textContent = originalText;
-        btn.disabled = false;
-    }
-}
-
-// Delete Custom Plant
-async function deletePlant(plantId) {
-    if (!confirm('Delete this plant?')) return;
-    
-    try {
-        const { error } = await supabase
-            .from(CONFIG.CUSTOM_PLANTS_TABLE)
-            .delete()
-            .eq('id', plantId);
-        
-        if (error) throw error;
-        
-        // Remove from local array
-        customPlants = customPlants.filter(p => p.id !== plantId);
-        
-        // Clear selected plant if it was deleted
-        if (settings.selectedPlant?.id === plantId) {
-            settings.selectedPlant = null;
-            saveSettings();
-            document.getElementById('plantInfo').style.display = 'none';
-            const card = document.getElementById('currentReadingCard');
-            card.style.backgroundImage = '';
-            card.style.background = 'var(--accent-gradient)';
-        }
-        
-        await populatePlants();
-    } catch (err) {
-        console.error('Error deleting plant:', err);
-        alert('Error deleting plant: ' + err.message);
-    }
-}
-
-=======
-=======
->>>>>>> parent of dd6e02b (v5)
+    // Add to database and custom plants list
     PLANTS_DATABASE.push(plant);
+    if (!settings.customPlants) settings.customPlants = [];
+    settings.customPlants.push(plant);
+    saveSettings();
+    
     selectPlant(plant);
+    populatePlants();
     
     // Reset form
     document.getElementById('customPlantName').value = '';
@@ -442,10 +290,33 @@ async function deletePlant(plantId) {
     preview.style.display = 'none';
 }
 
-<<<<<<< HEAD
->>>>>>> parent of dd6e02b (v5)
-=======
->>>>>>> parent of dd6e02b (v5)
+function deletePlant(plantName) {
+    if (!confirm(`Delete "${plantName}"?`)) return;
+    
+    // Find and remove from database
+    const idx = PLANTS_DATABASE.findIndex(p => p.name === plantName && p.rarity === 'Custom');
+    if (idx > -1) {
+        PLANTS_DATABASE.splice(idx, 1);
+    }
+    
+    // Remove from custom plants list
+    if (settings.customPlants) {
+        settings.customPlants = settings.customPlants.filter(p => p.name !== plantName);
+    }
+    
+    // Clear selected plant if it was deleted
+    if (settings.selectedPlant?.name === plantName) {
+        settings.selectedPlant = null;
+        document.getElementById('plantInfo').style.display = 'none';
+        const card = document.getElementById('currentReadingCard');
+        card.style.backgroundImage = '';
+        card.style.background = 'var(--accent-gradient)';
+    }
+    
+    saveSettings();
+    populatePlants();
+}
+
 // Calibration
 function startCalibration() {
     document.getElementById('calibrationModal').style.display = 'flex';
@@ -507,9 +378,8 @@ async function loadHistoricalData() {
         chartData.labels = [];
         chartData.values = [];
         
-<<<<<<< HEAD
-<<<<<<< HEAD
         if (settings.timeRange === 168) {
+            // 7 days - group by day
             const dayGroups = {};
             const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
             
@@ -529,6 +399,7 @@ async function loadHistoricalData() {
                 chartData.values.push(rawToPercentage(Math.round(avg)));
             });
         } else if (settings.timeRange === 24) {
+            // 24 hours - one point per hour
             const hourGroups = {};
             
             data.forEach(r => {
@@ -541,6 +412,7 @@ async function loadHistoricalData() {
                 hourGroups[hour].times.push(date.getTime());
             });
             
+            // Get current hour and go back 24 hours
             const now = new Date();
             const currentHour = now.getHours();
             
@@ -554,6 +426,7 @@ async function loadHistoricalData() {
                 }
             }
         } else {
+            // 1 or 6 hours - use original logic
             let lastTime = 0;
             data.forEach(r => {
                 const time = new Date(r.created_at).getTime();
@@ -564,28 +437,6 @@ async function loadHistoricalData() {
                 }
             });
         }
-=======
-        let lastTime = 0;
-        data.forEach(r => {
-            const time = new Date(r.created_at).getTime();
-            if (time - lastTime >= CONFIG.CHART_DATA_INTERVAL) {
-                chartData.labels.push(formatTime(new Date(r.created_at)));
-                chartData.values.push(rawToPercentage(r.value));
-                lastTime = time;
-            }
-        });
->>>>>>> parent of dd6e02b (v5)
-=======
-        let lastTime = 0;
-        data.forEach(r => {
-            const time = new Date(r.created_at).getTime();
-            if (time - lastTime >= CONFIG.CHART_DATA_INTERVAL) {
-                chartData.labels.push(formatTime(new Date(r.created_at)));
-                chartData.values.push(rawToPercentage(r.value));
-                lastTime = time;
-            }
-        });
->>>>>>> parent of dd6e02b (v5)
         
         updateChart();
         
@@ -685,8 +536,8 @@ function showNotification(title, msg) {
 function initChart() {
     const ctx = document.getElementById('moistureChart').getContext('2d');
     const isDark = document.body.getAttribute('data-theme') === 'dark';
-    const textColor = isDark ? '#e2e8f0' : '#4a5568';
-    const gridColor = isDark ? 'rgba(226, 232, 240, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+    const textColor = isDark ? '#f0f5f4' : '#0a0f0e';
+    const gridColor = isDark ? 'rgba(240, 245, 244, 0.1)' : 'rgba(10, 15, 14, 0.1)';
     
     chart = new Chart(ctx, {
         type: 'line',
@@ -695,8 +546,8 @@ function initChart() {
             datasets: [{
                 label: 'Moisture',
                 data: [],
-                borderColor: '#667eea',
-                backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                borderColor: '#5fab95',
+                backgroundColor: 'rgba(95, 171, 149, 0.1)',
                 borderWidth: 2,
                 fill: true,
                 tension: 0.4
