@@ -10,8 +10,8 @@
 </head>
 <body>
     <!-- Hamburger Menu -->
-    <div id="menuOverlay" class="menu-overlay">
-        <div class="menu-content">
+    <div id="menuOverlay" class="menu-overlay" onclick="handleMenuOverlayClick(event)">
+        <div class="menu-content" onclick="event.stopPropagation()">
             <button class="close-menu" onclick="closeMenu()">×</button>
             <nav class="menu-nav">
                 <a href="#" onclick="showPage('dashboard')">
@@ -352,9 +352,11 @@
                             <h3>About the Developer</h3>
                             <div class="dev-stack">
                                 <p>Hello! My name is <strong>Martin Josh de Leon</strong>, a 3rd year CS student at <strong>Technological University of the Philippines</strong>. Reach out to me on any of the following platforms:</p>
-                                <span class="dev-badge github"><a href="https://github.com/Seiyana">GitHub</a></span>
-                                <span class="dev-badge facebook"><a href="https://www.facebook.com/Seiytri">Facebook</a></span>
-                                <span class="dev-badge email"><a href="mailto:mj.deleon214@gmail.com">Email</a></span>
+                                <div class="dev-badges-container">
+                                    <a href="https://github.com/Seiyana" class="dev-badge github">GitHub</a>
+                                    <a href="https://www.facebook.com/Seiytri" class="dev-badge facebook">Facebook</a>
+                                    <a href="mailto:mj.deleon214@gmail.com" class="dev-badge email">Email</a>
+                                </div>
                             </div>
                         </div>
 
