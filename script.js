@@ -432,91 +432,89 @@ async function loadTimeRangeData(hours, dataObj) {
     const hoursAgo = new Date();
     hoursAgo.setHours(hoursAgo.getHours() - hours);
     
-    const { data, error } = await supabase
-        .from(CONFIG.TABLE_NAME)
-        .select('value, created_at')
-        .gte('created_at', hoursAgo.toISOString())
-        .order('created_at', { ascending: true });
-    
-    if (error) throw error;
-    
     dataObj.labels = [];
     dataObj.values = [];
     
-    if (!data || data.length === 0) {
-        return;
-    }
+    let data, error;
     
     if (hours === 168) {
-        // 7 days - one point per day
-        const dayGroups = {};
-        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        // 7 days - use daily aggregates
+        const daysAgo = new Date();
+        daysAgo.setDate(daysAgo.getDate() - 7);
         
-        data.forEach(r => {
-            const date = new Date(r.created_at);
-            const dayKey = date.toDateString();
-            if (!dayGroups[dayKey]) {
-                dayGroups[dayKey] = { values: [], day: days[date.getDay()], date: date };
-            }
-            dayGroups[dayKey].values.push(r.value);
-        });
+        const result = await supabase
+            .from('moisture_avg_day')
+            .select('bucket_start, avg_value')
+            .gte('bucket_start', daysAgo.toISOString())
+            .order('bucket_start', { ascending: true });
         
-        Object.values(dayGroups)
-            .sort((a, b) => a.date - b.date)
-            .forEach(group => {
-                const avg = group.values.reduce((a, b) => a + b, 0) / group.values.length;
-                dataObj.labels.push(group.day);
-                dataObj.values.push(rawToPercentage(Math.round(avg)));
+        data = result.data;
+        error = result.error;
+        
+        if (error) throw error;
+        
+        if (data && data.length > 0) {
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            data.forEach(row => {
+                const date = new Date(row.bucket_start);
+                dataObj.labels.push(days[date.getDay()]);
+                dataObj.values.push(rawToPercentage(Math.round(row.avg_value)));
             });
+        }
     } else if (hours === 24) {
-        // 24 hours - one point per hour
-        const hourGroups = {};
+        // 24 hours - use hourly aggregates
+        const result = await supabase
+            .from('moisture_avg_hour')
+            .select('bucket_start, avg_value')
+            .gte('bucket_start', hoursAgo.toISOString())
+            .order('bucket_start', { ascending: true });
         
-        data.forEach(r => {
-            const date = new Date(r.created_at);
-            const hourKey = `${date.getDate()}-${date.getHours()}`;
-            if (!hourGroups[hourKey]) {
-                hourGroups[hourKey] = { values: [], hour: date.getHours(), time: date.getTime() };
-            }
-            hourGroups[hourKey].values.push(r.value);
-        });
+        data = result.data;
+        error = result.error;
         
-        Object.values(hourGroups)
-            .sort((a, b) => a.time - b.time)
-            .forEach(group => {
-                const avg = group.values.reduce((a, b) => a + b, 0) / group.values.length;
-                const hour = group.hour;
+        if (error) throw error;
+        
+        if (data && data.length > 0) {
+            data.forEach(row => {
+                const date = new Date(row.bucket_start);
+                const hour = date.getHours();
                 const label = hour === 0 ? '12am' : hour === 12 ? '12pm' : hour < 12 ? `${hour}am` : `${hour-12}pm`;
                 dataObj.labels.push(label);
-                dataObj.values.push(rawToPercentage(Math.round(avg)));
+                dataObj.values.push(rawToPercentage(Math.round(row.avg_value)));
             });
+        }
     } else {
-        // 1 hour - one point every 5 minutes
-        const minuteGroups = {};
+        // 1 hour - use 5-minute aggregates
+        const result = await supabase
+            .from('moisture_avg_5min')
+            .select('bucket_start, avg_value')
+            .gte('bucket_start', hoursAgo.toISOString())
+            .order('bucket_start', { ascending: true });
         
-        data.forEach(r => {
-            const date = new Date(r.created_at);
-            const minute = Math.floor(date.getMinutes() / 5) * 5;
-            const key = `${date.getHours()}:${minute}`;
-            if (!minuteGroups[key]) {
-                minuteGroups[key] = { values: [], time: date.getTime(), hour: date.getHours(), minute: minute };
-            }
-            minuteGroups[key].values.push(r.value);
-        });
+        data = result.data;
+        error = result.error;
         
-        Object.values(minuteGroups)
-            .sort((a, b) => a.time - b.time)
-            .forEach(group => {
-                const avg = group.values.reduce((a, b) => a + b, 0) / group.values.length;
-                const label = `${group.hour.toString().padStart(2, '0')}:${group.minute.toString().padStart(2, '0')}`;
+        if (error) throw error;
+        
+        if (data && data.length > 0) {
+            data.forEach(row => {
+                const date = new Date(row.bucket_start);
+                const label = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
                 dataObj.labels.push(label);
-                dataObj.values.push(rawToPercentage(Math.round(avg)));
+                dataObj.values.push(rawToPercentage(Math.round(row.avg_value)));
             });
+        }
     }
     
-    // Update current value from latest reading
-    if (data.length > 0) {
-        const latest = data[data.length - 1];
+    // Update current value from latest raw reading
+    const { data: latestData } = await supabase
+        .from(CONFIG.TABLE_NAME)
+        .select('value, created_at')
+        .order('created_at', { ascending: false })
+        .limit(1);
+    
+    if (latestData && latestData.length > 0) {
+        const latest = latestData[0];
         currentRawValue = latest.value;
         updateCurrentValue(rawToPercentage(latest.value), new Date(latest.created_at));
     }
