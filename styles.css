@@ -79,6 +79,17 @@ header h1 {
     text-align: center;
 }
 
+.logo h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--accent-primary);
+}
+
+.logo h1 span {
+    color: var(--accent-tertiary);
+}
+
 .hamburger {
     display: flex;
     flex-direction: column;
