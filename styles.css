@@ -893,6 +893,11 @@ main {
     line-height: 1.8;
 }
 
+.about-section a {
+    color: var(--accent-primary);
+    text-decoration: none;
+}
+
 .tech-stack {
     display: flex;
     flex-wrap: wrap;
@@ -916,6 +921,25 @@ main {
 .tech-badge.chartjs { background: linear-gradient(135deg, #FF6384 0%, #36A2EB 100%); }
 .tech-badge.html5 { background: linear-gradient(135deg, #E34F26 0%, #C2290A 100%); }
 .tech-badge.css3 { background: linear-gradient(135deg, #1572B6 0%, #0E4E85 100%); }
+
+.dev-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.dev-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: white;
+}
+
+.dev-badge.github { background: #333; }
+.dev-badge.facebook { background: #3b5998; }
+.dev-badge.email { background: #1da1f2; }
 
 .form-group {
     margin-bottom: 1.5rem;
