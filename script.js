@@ -50,6 +50,7 @@ let settings = {
 
 let currentRawValue = 0;
 let lastNotificationTime = 0;
+let lastThresholdState = 'normal';
 
 // SUPABASE CLIENT
 const supabase = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
@@ -594,27 +595,107 @@ function addDataPoint(dataObj, time, pct, hours) {
 function checkThreshold(pct) {
     if (!settings.notificationsEnabled || !settings.selectedPlant) return;
     
-    const now = Date.now();
-    if (now - lastNotificationTime < 300000) return;
-    
     const { name, threshold } = settings.selectedPlant;
+    let currentState = 'normal';
     
+    // Determine current state
     if (pct < threshold.min) {
-        showNotification(`${name} needs water!`, `Moisture at ${pct}%, below ${threshold.min}%`);
-        lastNotificationTime = now;
+        currentState = 'too-dry';
     } else if (pct > threshold.max) {
-        showNotification(`${name} too wet!`, `Moisture at ${pct}%, above ${threshold.max}%`);
-        lastNotificationTime = now;
+        currentState = 'too-wet';
+    }
+    
+    // Only notify if state has changed
+    if (currentState !== lastThresholdState) {
+        if (currentState === 'too-dry') {
+            showNotification(`${name} needs water!`, `Moisture at ${pct}%, below ${threshold.min}%`, 'danger');
+        } else if (currentState === 'too-wet') {
+            showNotification(`${name} is too wet!`, `Moisture at ${pct}%, above ${threshold.max}%`, 'warning');
+        } else if (lastThresholdState !== 'normal') {
+            // Back to normal - show success notification
+            showNotification(`${name} moisture is good!`, `Back to normal at ${pct}%`, 'success');
+        }
+        
+        lastThresholdState = currentState;
     }
 }
 
-function showNotification(title, msg) {
+function showNotification(title, msg, type = 'warning') {
+    // Browser notification (if supported and permitted)
     if ('Notification' in window) {
         Notification.requestPermission().then(p => {
-            if (p === 'granted') new Notification(title, { body: msg, icon: '🌱' });
+            if (p === 'granted') {
+                new Notification(title, { 
+                    body: msg,
+                    tag: 'moisture-alert'
+                });
+            }
         });
     }
-    alert(`${title}\n${msg}`);
+    
+    // Custom modal notification
+    showCustomNotification(title, msg, type);
+}
+
+function showCustomNotification(title, msg, type) {
+    // Create notification modal if it doesn't exist
+    let modal = document.getElementById('notificationModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'notificationModal';
+        modal.className = 'notification-modal';
+        modal.innerHTML = `
+            <div class="notification-modal-content">
+                <div class="notification-icon"></div>
+                <h3 class="notification-title"></h3>
+                <p class="notification-message"></p>
+                <button class="notification-close-btn" onclick="closeNotificationModal()">OK</button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+    
+    // Update content
+    const iconEl = modal.querySelector('.notification-icon');
+    const titleEl = modal.querySelector('.notification-title');
+    const messageEl = modal.querySelector('.notification-message');
+    const content = modal.querySelector('.notification-modal-content');
+    
+    // Reset classes
+    content.className = 'notification-modal-content';
+    content.classList.add(type);
+    
+    // Set icon based on type
+    if (type === 'success') {
+        iconEl.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>';
+        iconEl.style.color = 'var(--success-color)';
+    } else if (type === 'danger') {
+        iconEl.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>';
+        iconEl.style.color = 'var(--danger-color)';
+    } else {
+        iconEl.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>';
+        iconEl.style.color = 'var(--warning-color)';
+    }
+    
+    titleEl.textContent = title;
+    messageEl.textContent = msg;
+    
+    // Show modal
+    modal.classList.add('show');
+    
+    // Auto-close success notifications after 5 seconds
+    if (type === 'success') {
+        setTimeout(() => {
+            closeNotificationModal();
+        }, 5000);
+    }
+}
+
+function closeNotificationModal() {
+    const modal = document.getElementById('notificationModal');
+    if (modal) {
+        modal.classList.remove('show');
+    }
 }
 
 // Chart
