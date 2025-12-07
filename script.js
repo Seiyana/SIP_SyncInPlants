@@ -134,7 +134,7 @@ function resetSettings() {
     alert('Settings reset');
 }
 
-// Theme
+// Themes
 function toggleTheme() {
     settings.theme = document.getElementById('themeToggle').value;
     saveSettings();
