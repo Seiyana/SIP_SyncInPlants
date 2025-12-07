@@ -275,13 +275,15 @@ async function loadUserSensors() {
             .select('*')
             .eq('user_id', currentUser.id)
             .eq('is_active', true)
-            .not('device_id', 'like', 'pending%');
+            .order('created_at', { ascending: false });
         
         if (error) throw error;
         
-        if (data && data.length > 0) {
-            selectedSensorId = data[0].id;
-            console.log('Using sensor:', data[0].sensor_name, selectedSensorId);
+        const pairedSensors = data?.filter(s => !s.device_id.startsWith('pending_')) || [];
+        
+        if (pairedSensors.length > 0) {
+            selectedSensorId = pairedSensors[0].id;
+            console.log('Using sensor:', pairedSensors[0].sensor_name, selectedSensorId);
         } else {
             showNoSensorMessage();
         }
