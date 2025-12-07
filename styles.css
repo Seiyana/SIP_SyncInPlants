@@ -77,6 +77,7 @@ header {
     transform: translateX(-50%);
 }
 
+<<<<<<< HEAD
 .logo h1 {
     font-size: 1.5rem;
     font-weight: 700;
@@ -84,6 +85,8 @@ header {
     color: var(--accent-primary);
 }
 
+=======
+>>>>>>> parent of edfce63 (FINAL)
 .hamburger {
     display: flex;
     flex-direction: column;
