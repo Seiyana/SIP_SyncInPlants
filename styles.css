@@ -71,13 +71,14 @@ header {
     z-index: 100;
 }
 
-.logo {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    flex: 1;
+    text-align: center;
 }
 
-<<<<<<< HEAD
 .logo h1 {
     font-size: 1.5rem;
     font-weight: 700;
@@ -85,8 +86,10 @@ header {
     color: var(--accent-primary);
 }
 
-=======
->>>>>>> parent of edfce63 (FINAL)
+.logo h1 span {
+    color: var(--accent-tertiary);
+}
+
 .hamburger {
     display: flex;
     flex-direction: column;
@@ -131,15 +134,13 @@ header {
     position: absolute;
     left: 0;
     top: 0;
-    width: 300px;
+    width: 280px;
     height: 100%;
     background: var(--bg-secondary);
     box-shadow: var(--shadow-lg);
     padding: 2rem;
     transform: translateX(-100%);
     transition: transform 0.3s ease;
-    display: flex;
-    flex-direction: column;
 }
 
 .menu-overlay.active .menu-content {
@@ -167,7 +168,6 @@ header {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    flex: 1;
 }
 
 .menu-nav a {
@@ -186,83 +186,12 @@ header {
     background-color: var(--bg-tertiary);
 }
 
-.menu-logout {
-    margin-top: auto;
-    border-top: 1px solid var(--border-color);
-    padding-top: 1rem !important;
-}
-
 .nav-icon {
     width: 24px;
     height: 24px;
     min-width: 24px;
     fill: var(--accent-primary);
     opacity: 0.8;
-}
-
-.menu-section {
-    padding: 1rem;
-    background: var(--bg-tertiary);
-    border-radius: 8px;
-    margin: 0.5rem 0;
-}
-
-.menu-section-title {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    margin-bottom: 0.75rem;
-}
-
-.api-key-container {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
-}
-
-.api-key-container code {
-    flex: 1;
-    padding: 0.5rem;
-    background: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    font-size: 0.75rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.btn-copy-api {
-    padding: 0.5rem 0.75rem;
-    background: var(--accent-primary);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.btn-copy-api:hover {
-    background: var(--accent-tertiary);
-}
-
-.btn-generate-api {
-    width: 100%;
-    padding: 0.5rem;
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    font-size: 0.75rem;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.btn-generate-api:hover {
-    border-color: var(--accent-primary);
-    color: var(--accent-primary);
 }
 
 .plant-panel {
@@ -399,36 +328,6 @@ header {
 
 .tab-content.active {
     display: block;
-}
-
-.custom-plant-step {
-    display: none;
-}
-
-.custom-plant-step.active {
-    display: block;
-}
-
-.custom-plant-step h3 {
-    font-size: 1.25rem;
-    color: var(--text-primary);
-    margin-bottom: 1rem;
-}
-
-.step-description {
-    color: var(--text-secondary);
-    margin-bottom: 1.5rem;
-    font-size: 0.95rem;
-}
-
-.step-buttons {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1.5rem;
-}
-
-.step-buttons button {
-    flex: 1;
 }
 
 .plants-grid {
@@ -734,6 +633,11 @@ main {
 .action-card:hover {
     box-shadow: var(--shadow-md);
     transform: translateY(-2px);
+}
+
+.action-card.coming-soon {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 .action-card svg {
@@ -1105,6 +1009,12 @@ main {
     background: var(--bg-tertiary);
 }
 
+.threshold-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
 .notification-box {
     padding: 1rem;
     border-radius: 8px;
@@ -1236,21 +1146,21 @@ main {
 
 @media (max-width: 768px) {
     header { padding: 1rem; }
-    .logo h1 { font-size: 1.25rem; }
+    header h1 { font-size: 1.25rem; }
     main { padding: 1rem; }
     .stats-grid { grid-template-columns: repeat(2, 1fr); }
     .current-value .value { font-size: 3rem; }
     .current-value .unit { font-size: 1.5rem; }
     .chart-container { padding: 1rem; min-height: 300px; }
     .card-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
-    .menu-content { width: 280px; }
+    .menu-content { width: 250px; }
     .panel-content { width: 100%; }
     .plants-grid { grid-template-columns: 1fr; }
+    .threshold-inputs { grid-template-columns: 1fr; }
     .charts-row { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 480px) {
     .stats-grid { grid-template-columns: 1fr; }
     .connection-status { display: none; }
-    .logo h1 { font-size: 1.1rem; }
 }
