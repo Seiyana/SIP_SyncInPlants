@@ -8,6 +8,17 @@ const CONFIG = {
     TIME_RANGE_HOURS: 24
 };
 
+async function loadTimeRangeData(hours, dataObj) {
+    const hoursAgo = new Date();
+    hoursAgo.setHours(hoursAgo.getHours() - hours);
+    
+    dataObj.labels = [];
+    dataObj.values = [];
+    
+    console.log(`Loading ${hours}h data for sensor:`, selectedSensorId, 'user:', currentUser?.id);
+    
+    let data, error;
+
 // PLANT DATABASE
 const PLANTS_DATABASE = [
     // Common Plants
