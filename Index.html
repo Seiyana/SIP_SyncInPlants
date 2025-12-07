@@ -401,6 +401,19 @@
         </div>
     </div>
 
+    <!-- Add to Settings page -->
+<div class="setting-group">
+    <label>
+        <strong>Sensor API Key</strong>
+        <p class="setting-description">Use this key to pair new sensors</p>
+    </label>
+    <div class="api-key-display">
+        <code id="userApiKey">Loading...</code>
+        <button onclick="copyApiKey()">Copy</button>
+    </div>
+    <button class="btn-secondary" onclick="generateNewApiKey()">Generate New Key</button>
+</div>
+
     <script src="script.js"></script>
 </body>
 </html>

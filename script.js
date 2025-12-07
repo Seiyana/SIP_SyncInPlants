@@ -34,7 +34,10 @@ const PLANTS_DATABASE = [
     { name: 'Hoya Carnosa', rarity: 'Rare', moisture: 'Low', threshold: { min: 30, max: 50 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/plant-images/Hoya_Carnosa.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwbGFudC1pbWFnZXMvSG95YV9DYXJub3NhLnBuZyIsImlhdCI6MTc2NDU5MDQ3MiwiZXhwIjoxNzk2MTI2NDcyfQ.fwgG4NFjnY5iBQmabwVaGuW-eFc4GRLKs-fRQ5xiK2E' }
 ];
 
-// STATE
+// GLOBAL STATE
+let currentUser = null;
+let currentSession = null;
+let selectedSensorId = null;
 let hourChart, dayChart, weekChart, realtimeSubscription, liveDataInterval;
 let hourData = { labels: [], values: [] };
 let dayData = { labels: [], values: [] };
@@ -44,12 +47,10 @@ let settings = {
     theme: 'light',
     notificationsEnabled: false,
     calibration: { dry: 3200, wet: 1200 },
-    selectedPlant: null,
-    customPlants: []
+    selectedPlant: null
 };
 
 let currentRawValue = 0;
-let lastNotificationTime = 0;
 let lastThresholdState = 'normal';
 
 // SUPABASE CLIENT
@@ -57,10 +58,67 @@ const supabase = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABA
 
 // INIT
 document.addEventListener('DOMContentLoaded', async () => {
-    loadSettings();
+    await checkAuthAndInit();
+});
+
+async function loadUserApiKey() {
+    const { data } = await supabase
+        .from('sensors')
+        .select('api_key')
+        .eq('user_id', currentUser.id)
+        .limit(1)
+        .single();
+    
+    if (data) {
+        document.getElementById('userApiKey').textContent = data.api_key;
+    } else {
+        // Create first sensor entry
+        const { data: newSensor } = await supabase
+            .from('sensors')
+            .insert({
+                user_id: currentUser.id,
+                sensor_name: 'My Sensor',
+                device_id: 'pending'
+            })
+            .select()
+            .single();
+        
+        document.getElementById('userApiKey').textContent = newSensor.api_key;
+    }
+}
+
+function copyApiKey() {
+    const key = document.getElementById('userApiKey').textContent;
+    navigator.clipboard.writeText(key);
+    alert('API key copied to clipboard!');
+}
+
+// ==================== AUTHENTICATION ====================
+
+async function checkAuthAndInit() {
+    // Check if user is logged in
+    const { data: { session }, error } = await supabase.auth.getSession();
+    
+    if (error || !session) {
+        // Not logged in - redirect to auth page
+        window.location.href = 'auth.html';
+        return;
+    }
+    
+    currentSession = session;
+    currentUser = session.user;
+    
+    // Add logout button to header
+    addLogoutButton();
+    
+    // Load user's settings from database
+    await loadUserSettings();
+    
+    // Continue with normal initialization
     applyTheme();
     initCharts();
-    populatePlants();
+    await loadUserPlants();
+    await loadUserSensors();
     await loadHistoricalData();
     setupRealtimeSubscription();
     startLiveDataFetch();
@@ -69,75 +127,474 @@ document.addEventListener('DOMContentLoaded', async () => {
     const imgInput = document.getElementById('customPlantImage');
     if (imgInput) imgInput.addEventListener('change', handleImagePreview);
     
-    // Close panel when clicking outside
     const plantPanel = document.getElementById('plantPanel');
     if (plantPanel) {
         plantPanel.addEventListener('click', handlePanelClick);
     }
-});
+}
 
-// Settings
-function loadSettings() {
-    const saved = localStorage.getItem('moistureMonitorSettings');
-    if (saved) {
-        settings = { ...settings, ...JSON.parse(saved) };
-        
-        // Load custom plants
-        if (settings.customPlants && settings.customPlants.length > 0) {
-            PLANTS_DATABASE.push(...settings.customPlants);
-        }
-        
-        const themeToggle = document.getElementById('themeToggle');
-        const notifToggle = document.getElementById('notificationsEnabled');
-        
-        if (themeToggle) themeToggle.value = settings.theme;
-        if (notifToggle) notifToggle.checked = settings.notificationsEnabled;
-        
-        if (settings.selectedPlant) displaySelectedPlant(settings.selectedPlant);
+function addLogoutButton() {
+    const header = document.querySelector('header');
+    const connectionStatus = document.getElementById('connectionStatus');
+    
+    const logoutBtn = document.createElement('button');
+    logoutBtn.className = 'btn-logout';
+    logoutBtn.textContent = 'Logout';
+    logoutBtn.onclick = handleLogout;
+    logoutBtn.style.cssText = `
+        padding: 0.5rem 1rem;
+        background: var(--accent-primary);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+    `;
+    
+    header.insertBefore(logoutBtn, connectionStatus);
+}
+
+async function handleLogout() {
+    const { error } = await supabase.auth.signOut();
+    if (!error) {
+        window.location.href = 'auth.html';
     }
 }
 
-function saveSettings() {
-    localStorage.setItem('moistureMonitorSettings', JSON.stringify(settings));
+// ==================== USER SETTINGS ====================
+
+async function loadUserSettings() {
+    try {
+        const { data, error } = await supabase
+            .from('user_plant_settings')
+            .select('*')
+            .eq('user_id', currentUser.id)
+            .single();
+        
+        if (error && error.code !== 'PGRST116') throw error;
+        
+        if (data) {
+            settings.theme = data.theme || 'light';
+            settings.notificationsEnabled = data.notifications_enabled || false;
+            settings.calibration = {
+                dry: data.calibration_dry || 3200,
+                wet: data.calibration_wet || 1200
+            };
+            settings.selectedPlant = data.selected_plant_data || null;
+            
+            // Update UI
+            const themeToggle = document.getElementById('themeToggle');
+            const notifToggle = document.getElementById('notificationsEnabled');
+            
+            if (themeToggle) themeToggle.value = settings.theme;
+            if (notifToggle) notifToggle.checked = settings.notificationsEnabled;
+            
+            if (settings.selectedPlant) {
+                displaySelectedPlant(settings.selectedPlant);
+            }
+        } else {
+            // Create default settings
+            await saveUserSettings();
+        }
+    } catch (err) {
+        console.error('Error loading user settings:', err);
+    }
+}
+
+async function saveUserSettings() {
+    try {
+        const { error } = await supabase
+            .from('user_plant_settings')
+            .upsert({
+                user_id: currentUser.id,
+                theme: settings.theme,
+                notifications_enabled: settings.notificationsEnabled,
+                calibration_dry: settings.calibration.dry,
+                calibration_wet: settings.calibration.wet,
+                selected_plant_data: settings.selectedPlant,
+                selected_plant_name: settings.selectedPlant?.name || null
+            });
+        
+        if (error) throw error;
+        console.log('Settings saved to database');
+    } catch (err) {
+        console.error('Error saving settings:', err);
+    }
 }
 
 function updateSettings() {
     settings.notificationsEnabled = document.getElementById('notificationsEnabled').checked;
-    saveSettings();
+    saveUserSettings();
 }
 
 function resetSettings() {
     if (!confirm('Reset all settings to defaults?')) return;
     
-    // Remove custom plants from database
-    const customPlants = settings.customPlants || [];
-    customPlants.forEach(cp => {
-        const idx = PLANTS_DATABASE.findIndex(p => p.name === cp.name && p.rarity === 'Custom');
-        if (idx > -1) PLANTS_DATABASE.splice(idx, 1);
-    });
-    
     settings = {
         theme: 'light',
         notificationsEnabled: false,
         calibration: { dry: 3200, wet: 1200 },
-        selectedPlant: null,
-        customPlants: []
+        selectedPlant: null
     };
-    saveSettings();
-    loadSettings();
+    
+    saveUserSettings();
+    loadUserSettings();
     applyTheme();
-    populatePlants();
+    
     document.getElementById('plantInfo').style.display = 'none';
     const card = document.getElementById('currentReadingCard');
     card.style.backgroundImage = '';
     card.style.background = 'var(--accent-gradient)';
+    
     alert('Settings reset');
+}
+
+// ==================== SENSORS MANAGEMENT ====================
+
+async function loadUserSensors() {
+    try {
+        const { data, error } = await supabase
+            .from('sensors')
+            .select('*')
+            .eq('user_id', currentUser.id)
+            .eq('is_active', true);
+        
+        if (error) throw error;
+        
+        if (data && data.length > 0) {
+            // Use first sensor by default
+            selectedSensorId = data[0].id;
+            console.log('Using sensor:', data[0].sensor_name, selectedSensorId);
+        } else {
+            // No sensors - show setup instructions
+            showNoSensorMessage();
+        }
+    } catch (err) {
+        console.error('Error loading sensors:', err);
+    }
+}
+
+function showNoSensorMessage() {
+    const notificationBox = document.getElementById('notificationBox');
+    if (notificationBox) {
+        notificationBox.className = 'notification-box warning show';
+        notificationBox.innerHTML = `
+            <strong>No Sensor Found</strong><br>
+            Please pair your ESP32 sensor to start monitoring.
+            Check the Setup Instructions page for guidance.
+        `;
+    }
+}
+
+// ==================== CUSTOM PLANTS (DATABASE) ====================
+
+async function loadUserPlants() {
+    try {
+        const { data, error } = await supabase
+            .from('custom_plants')
+            .select('*')
+            .eq('user_id', currentUser.id);
+        
+        if (error) throw error;
+        
+        if (data && data.length > 0) {
+            // Add custom plants to PLANTS_DATABASE
+            data.forEach(plant => {
+                const customPlant = {
+                    name: plant.name,
+                    rarity: 'Custom',
+                    moisture: plant.moisture_level,
+                    threshold: {
+                        min: plant.min_threshold,
+                        max: plant.max_threshold
+                    },
+                    image: plant.image_url,
+                    dbId: plant.id
+                };
+                
+                // Check if already exists
+                const exists = PLANTS_DATABASE.find(p => p.dbId === plant.id);
+                if (!exists) {
+                    PLANTS_DATABASE.push(customPlant);
+                }
+            });
+        }
+        
+        populatePlants();
+    } catch (err) {
+        console.error('Error loading custom plants:', err);
+    }
+}
+
+async function addCustomPlant() {
+    const name = document.getElementById('customPlantName').value;
+    const min = parseInt(document.getElementById('customPlantMinThreshold').value);
+    const max = parseInt(document.getElementById('customPlantMaxThreshold').value);
+    const preview = document.getElementById('customImagePreview');
+    
+    if (!name || !min || !max) {
+        alert('Please fill in all fields');
+        return;
+    }
+    
+    if (!preview.src || preview.style.display === 'none') {
+        alert('Please upload a plant image');
+        return;
+    }
+    
+    const moistureLevel = min < 35 ? 'Low' : (min < 55 ? 'Medium' : 'High');
+    
+    try {
+        // Save to database
+        const { data, error } = await supabase
+            .from('custom_plants')
+            .insert({
+                user_id: currentUser.id,
+                name: name,
+                image_url: preview.src,
+                min_threshold: min,
+                max_threshold: max,
+                moisture_level: moistureLevel
+            })
+            .select()
+            .single();
+        
+        if (error) throw error;
+        
+        const plant = {
+            name,
+            rarity: 'Custom',
+            moisture: moistureLevel,
+            threshold: { min, max },
+            image: preview.src,
+            dbId: data.id
+        };
+        
+        PLANTS_DATABASE.push(plant);
+        selectPlant(plant);
+        populatePlants();
+        
+        // Reset form
+        document.getElementById('customPlantName').value = '';
+        document.getElementById('customPlantMinThreshold').value = '';
+        document.getElementById('customPlantMaxThreshold').value = '';
+        document.getElementById('customPlantImage').value = '';
+        preview.style.display = 'none';
+        
+    } catch (err) {
+        console.error('Error adding custom plant:', err);
+        alert('Failed to add custom plant: ' + err.message);
+    }
+}
+
+async function deletePlant(plantName) {
+    if (!confirm(`Delete "${plantName}"?`)) return;
+    
+    const plant = PLANTS_DATABASE.find(p => p.name === plantName && p.rarity === 'Custom');
+    if (!plant || !plant.dbId) return;
+    
+    try {
+        const { error } = await supabase
+            .from('custom_plants')
+            .delete()
+            .eq('id', plant.dbId)
+            .eq('user_id', currentUser.id);
+        
+        if (error) throw error;
+        
+        // Remove from local array
+        const idx = PLANTS_DATABASE.findIndex(p => p.dbId === plant.dbId);
+        if (idx > -1) {
+            PLANTS_DATABASE.splice(idx, 1);
+        }
+        
+        // Clear selected plant if it was deleted
+        if (settings.selectedPlant?.name === plantName) {
+            settings.selectedPlant = null;
+            await saveUserSettings();
+            document.getElementById('plantInfo').style.display = 'none';
+            const card = document.getElementById('currentReadingCard');
+            card.style.backgroundImage = '';
+            card.style.background = 'var(--accent-gradient)';
+        }
+        
+        populatePlants();
+    } catch (err) {
+        console.error('Error deleting plant:', err);
+        alert('Failed to delete plant: ' + err.message);
+    }
+}
+
+// ==================== DATA LOADING (USER-SPECIFIC) ====================
+
+async function loadHistoricalData() {
+    if (!selectedSensorId) {
+        console.log('No sensor selected');
+        return;
+    }
+    
+    try {
+        updateConnectionStatus('connecting');
+        
+        await loadTimeRangeData(1, hourData);
+        updateChart(hourChart, hourData);
+        
+        await loadTimeRangeData(24, dayData);
+        updateChart(dayChart, dayData);
+        
+        await loadTimeRangeData(168, weekData);
+        updateChart(weekChart, weekData);
+        
+        updateConnectionStatus('connected');
+    } catch (err) {
+        console.error('Load error:', err);
+        updateConnectionStatus('disconnected');
+    }
+}
+
+async function loadTimeRangeData(hours, dataObj) {
+    const hoursAgo = new Date();
+    hoursAgo.setHours(hoursAgo.getHours() - hours);
+    
+    dataObj.labels = [];
+    dataObj.values = [];
+    
+    let data, error;
+    
+    if (hours === 168) {
+        const daysAgo = new Date();
+        daysAgo.setDate(daysAgo.getDate() - 7);
+        
+        const result = await supabase
+            .from('moisture_avg_day')
+            .select('bucket_start, avg_value')
+            .eq('user_id', currentUser.id)
+            .eq('sensor_id', selectedSensorId)
+            .gte('bucket_start', daysAgo.toISOString())
+            .order('bucket_start', { ascending: true });
+        
+        data = result.data;
+        error = result.error;
+        
+        if (error) throw error;
+        
+        if (data && data.length > 0) {
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            data.forEach(row => {
+                const date = new Date(row.bucket_start);
+                dataObj.labels.push(days[date.getDay()]);
+                dataObj.values.push(rawToPercentage(Math.round(row.avg_value)));
+            });
+        }
+    } else if (hours === 24) {
+        const result = await supabase
+            .from('moisture_avg_hour')
+            .select('bucket_start, avg_value')
+            .eq('user_id', currentUser.id)
+            .eq('sensor_id', selectedSensorId)
+            .gte('bucket_start', hoursAgo.toISOString())
+            .order('bucket_start', { ascending: true });
+        
+        data = result.data;
+        error = result.error;
+        
+        if (error) throw error;
+        
+        if (data && data.length > 0) {
+            data.forEach(row => {
+                const date = new Date(row.bucket_start);
+                const hour = date.getHours();
+                const label = hour === 0 ? '12am' : hour === 12 ? '12pm' : hour < 12 ? `${hour}am` : `${hour-12}pm`;
+                dataObj.labels.push(label);
+                dataObj.values.push(rawToPercentage(Math.round(row.avg_value)));
+            });
+        }
+    } else {
+        const result = await supabase
+            .from('moisture_avg_5min')
+            .select('bucket_start, avg_value')
+            .eq('user_id', currentUser.id)
+            .eq('sensor_id', selectedSensorId)
+            .gte('bucket_start', hoursAgo.toISOString())
+            .order('bucket_start', { ascending: true });
+        
+        data = result.data;
+        error = result.error;
+        
+        if (error) throw error;
+        
+        if (data && data.length > 0) {
+            data.forEach(row => {
+                const date = new Date(row.bucket_start);
+                const label = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+                dataObj.labels.push(label);
+                dataObj.values.push(rawToPercentage(Math.round(row.avg_value)));
+            });
+        }
+    }
+    
+    // Update current value from latest raw reading
+    const { data: latestData } = await supabase
+        .from(CONFIG.TABLE_NAME)
+        .select('value, created_at')
+        .eq('user_id', currentUser.id)
+        .eq('sensor_id', selectedSensorId)
+        .order('created_at', { ascending: false })
+        .limit(1);
+    
+    if (latestData && latestData.length > 0) {
+        const latest = latestData[0];
+        currentRawValue = latest.value;
+        updateCurrentValue(rawToPercentage(latest.value), new Date(latest.created_at));
+    }
+}
+
+function setupRealtimeSubscription() {
+    if (!selectedSensorId) return;
+    
+    realtimeSubscription = supabase
+        .channel('moisture_changes')
+        .on('postgres_changes', {
+            event: 'INSERT',
+            schema: 'public',
+            table: CONFIG.TABLE_NAME,
+            filter: `sensor_id=eq.${selectedSensorId}`
+        }, (payload) => handleNewReading(payload.new))
+        .subscribe((status) => {
+            if (status === 'SUBSCRIBED') updateConnectionStatus('connected');
+        });
+}
+
+function startLiveDataFetch() {
+    if (!selectedSensorId) return;
+    
+    liveDataInterval = setInterval(async () => {
+        try {
+            const { data } = await supabase
+                .from(CONFIG.TABLE_NAME)
+                .select('value, created_at')
+                .eq('user_id', currentUser.id)
+                .eq('sensor_id', selectedSensorId)
+                .order('created_at', { ascending: false })
+                .limit(1);
+            
+            if (data?.length) {
+                currentRawValue = data[0].value;
+                const pct = rawToPercentage(data[0].value);
+                updateCurrentValue(pct, new Date(data[0].created_at));
+                checkThreshold(pct);
+            }
+        } catch (err) {
+            console.error('Fetch error:', err);
+        }
+    }, CONFIG.LIVE_REFRESH_INTERVAL);
 }
 
 // Theme
 function toggleTheme() {
     settings.theme = document.getElementById('themeToggle').value;
-    saveSettings();
+    saveUserSettings();
     applyTheme();
 }
 
@@ -234,7 +691,7 @@ function filterPlants(filter) {
 
 function selectPlant(plant) {
     settings.selectedPlant = plant;
-    saveSettings();
+    saveUserSettings();
     displaySelectedPlant(plant);
     closePlantPanel();
 }
