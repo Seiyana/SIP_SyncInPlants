@@ -35,11 +35,27 @@
                     <span>Setup Instructions</span>
                 </a>
 
+                <div class="menu-section">
+                    <div class="menu-section-title">Sensor API Key</div>
+                    <div class="api-key-container">
+                        <code id="menuApiKey">Loading...</code>
+                        <button class="btn-copy-api" onclick="copyMenuApiKey()">Copy</button>
+                    </div>
+                    <button class="btn-generate-api" onclick="generateNewApiKey()">Generate New Key</button>
+                </div>
+
                 <a href="#" onclick="showPage('about')">
                     <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-                        <path fill="currentColor" d="M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54-54 85.5-127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+                        <path fill="currentColor" d="M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
                     </svg>
                     <span>About</span>
+                </a>
+
+                <a href="#" class="menu-logout" onclick="handleLogout()">
+                    <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                        <path fill="currentColor" d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z"/>
+                    </svg>
+                    <span>Logout</span>
                 </a>
             </nav>
         </div>
@@ -74,23 +90,48 @@
             </div>
 
             <div id="customTab" class="tab-content">
-                <div class="form-group">
-                    <label>Plant Name</label>
-                    <input type="text" id="customPlantName" placeholder="e.g., My Monstera">
+                <!-- Step 1: Plant Name -->
+                <div id="customStep1" class="custom-plant-step active">
+                    <h3>Step 1: Name Your Plant</h3>
+                    <div class="form-group">
+                        <label>Plant Name</label>
+                        <input type="text" id="customPlantName" placeholder="e.g., My Monstera">
+                    </div>
+                    <button class="btn-primary" onclick="submitPlantName()" style="width: 100%;">Next</button>
                 </div>
-                <div class="form-group">
-                    <label>Upload Photo</label>
-                    <input type="file" id="customPlantImage" accept="image/*">
-                    <img id="customImagePreview" class="image-preview" style="display: none;">
-                </div>
-                <div class="form-group">
-                    <label>Moisture Thresholds (%)</label>
-                    <div class="threshold-inputs">
-                        <input type="number" id="customPlantMinThreshold" placeholder="Min %" min="0" max="100">
-                        <input type="number" id="customPlantMaxThreshold" placeholder="Max %" min="0" max="100">
+
+                <!-- Step 2: Thresholds -->
+                <div id="customStep2" class="custom-plant-step">
+                    <h3>Step 2: Set Moisture Thresholds</h3>
+                    <p class="step-description">Enter the ideal moisture range for your plant (0-100%)</p>
+                    <div class="form-group">
+                        <label>Minimum Moisture (%)</label>
+                        <input type="number" id="customPlantMinThreshold" placeholder="e.g., 40" min="0" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label>Maximum Moisture (%)</label>
+                        <input type="number" id="customPlantMaxThreshold" placeholder="e.g., 70" min="0" max="100">
+                    </div>
+                    <div class="step-buttons">
+                        <button class="btn-secondary" onclick="goToCustomStep(1)">Back</button>
+                        <button class="btn-primary" onclick="submitPlantThresholds()">Next</button>
                     </div>
                 </div>
-                <button class="btn-primary" onclick="addCustomPlant()" style="width: 100%;">Add Plant</button>
+
+                <!-- Step 3: Upload Image -->
+                <div id="customStep3" class="custom-plant-step">
+                    <h3>Step 3: Upload Plant Photo</h3>
+                    <p class="step-description">Add a photo to help identify your plant</p>
+                    <div class="form-group">
+                        <label>Upload Photo</label>
+                        <input type="file" id="customPlantImage" accept="image/*">
+                        <img id="customImagePreview" class="image-preview" style="display: none;">
+                    </div>
+                    <div class="step-buttons">
+                        <button class="btn-secondary" onclick="goToCustomStep(2)">Back</button>
+                        <button class="btn-primary" onclick="submitPlantImage()">Complete</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -155,12 +196,12 @@
                         <div class="action-label">Select Plant</div>
                         <div class="action-description">Choose your plant type</div>
                     </div>
-                    <div class="action-card coming-soon">
+                    <div class="action-card" onclick="showAddSensorInstructions()">
                         <svg viewBox="0 -960 960 960" xmlns="http://www.w3.org/2000/svg">
                             <path fill="currentColor" d="M197-197q-54-55-85.5-127.5T80-480q0-84 31.5-156.5T197-763l57 57q-44 44-69 102t-25 124q0 67 25 125t69 101zm113-113q-32-33-51-76.5T240-480q0-51 19-94.5t51-75.5l57 57q-22 22-34.5 51T320-480t12.5 62 34.5 51zm170-90q-33 0-56.5-23.5T400-480t23.5-56.5T480-560t56.5 23.5T560-480t-23.5 56.5T480-400m170 90-57-57q22-22 34.5-51t12.5-62-12.5-62-34.5-51l57-57q32 32 51 75.5t19 94.5q0 50-19 93.5T650-310m113 113-57-57q44-44 69-102t25-124q0-67-25-125t-69-101l57-57q54 54 85.5 126.5T880-480q0 83-31.5 155.5T763-197"/>
                         </svg>
                         <div class="action-label">Add Sensor</div>
-                        <div class="action-description">Coming Soon</div>
+                        <div class="action-description">Pair a new device</div>
                     </div>
                 </div>
 
@@ -273,12 +314,24 @@
                         </div>
 
                         <div class="about-section">
-                            <h3>Step 3: Add the Website</h3>
+                            <h3>Step 3: Pair Your Sensor</h3>
                             <ol>
-                                <li>Visit <strong><a href="https://syncinplants.netlify.app">SyncInPlants</a></strong> in your web browser</li>
+                                <li>Look for a WiFi network named "SyncInPlants_Setup_Pair"</li>
+                                <li>Connect to this network</li>
+                                <li>Copy your Sensor API Key from the menu (tap the hamburger icon)</li>
+                                <li>A pairing page will open automatically</li>
+                                <li>Paste your API key and give your sensor a name</li>
+                                <li>Click "Pair Sensor" and wait for confirmation</li>
+                            </ol>
+                        </div>
+
+                        <div class="about-section">
+                            <h3>Step 4: Start Monitoring</h3>
+                            <ol>
+                                <li>Return to the dashboard</li>
                                 <li>Click "Select Plant" to choose or add your plant</li>
                                 <li>Calibrate your sensor in the Settings</li>
-                                <li>Your sensor data should now appear on the dashboard in real-time</li>
+                                <li>Your sensor data should now appear in real-time</li>
                             </ol>
                         </div>
 
@@ -286,7 +339,7 @@
                             <h3>Troubleshooting</h3>
                             <ul>
                                 <li>If sensor not connecting: Restart the ESP32 and try the WiFi setup again</li>
-                                <li>If no data appears: Check that notifications are enabled in Settings</li>
+                                <li>If no data appears: Check that your sensor is paired correctly</li>
                                 <li>For calibration issues: Run the calibration process again from Settings</li>
                             </ul>
                         </div>
@@ -364,7 +417,7 @@
                             <h3>Version Information</h3>
                             <p>
                                 <strong>Version:</strong> 1.0.0<br>
-                                <strong>Last Updated:</strong> November 2025<br>
+                                <strong>Last Updated:</strong> December 2024<br>
                                 <strong>Status:</strong> Beta Release
                             </p>
                         </div>
