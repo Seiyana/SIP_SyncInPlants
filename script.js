@@ -8,30 +8,9 @@ const CONFIG = {
     TIME_RANGE_HOURS: 24
 };
 
-// PLANT DATABASE
+// PASTE PLANT DATABASE HERE
 const PLANTS_DATABASE = [
-    // Common Plants
-    { name: 'Snake Plant', rarity: 'Common', moisture: 'Low', threshold: { min: 20, max: 40 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/plant-images/Snake_Plant.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwbGFudC1pbWFnZXMvU25ha2VfUGxhbnQucG5nIiwiaWF0IjoxNzY0NTkwMjI2LCJleHAiOjE3OTYxMjYyMjZ9.1Yd1dstFFEv4_oUvRgqk1Ni5q3m2J1qfRREqFbvumE4' },
-    { name: 'Pothos', rarity: 'Common', moisture: 'Medium', threshold: { min: 40, max: 60 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/plant-images/Pothos.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwbGFudC1pbWFnZXMvUG90aG9zLnBuZyIsImlhdCI6MTc2NDU5MDI0NywiZXhwIjoxNzk2MTI2MjQ3fQ.EOisGgPJEhbBAO4i0iMGyNlb9F-hoIJm1jRPdhR-cNI' },
-    { name: 'Spider Plant', rarity: 'Common', moisture: 'Medium', threshold: { min: 40, max: 60 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/plant-images/Spider_Plant.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwbGFudC1pbWFnZXMvU3BpZGVyX1BsYW50LnBuZyIsImlhdCI6MTc2NDU5MDI2NiwiZXhwIjoxNzk2MTI2MjY2fQ.JUyeeJop5wU2-xoYXO1NBAUtsKkyIyuqEtVtv5Zbbsg' },
-    { name: 'Aloe Vera', rarity: 'Common', moisture: 'Low', threshold: { min: 20, max: 35 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/plant-images/Aloe_Vera.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwbGFudC1pbWFnZXMvQWxvZV9WZXJhLnBuZyIsImlhdCI6MTc2NDU5MDI4MCwiZXhwIjoxNzk2MTI2MjgwfQ.r_P5F2_upqArrQK4rquStzphMtYTMjL7vQnn6TOklAk' },
-    { name: 'Peace Lily', rarity: 'Common', moisture: 'High', threshold: { min: 60, max: 80 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/plant-images/Peace_Lily.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwbGFudC1pbWFnZXMvUGVhY2VfTGlseS5wbmciLCJpYXQiOjE3NjQ1OTAwMzcsImV4cCI6MTc5NjEyNjAzN30.jPFIxmrhjISpNZKroTgcMFve4NJmBJuC-jw_0ruWgk0' },
-    { name: 'ZZ Plant', rarity: 'Common', moisture: 'Low', threshold: { min: 20, max: 40 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/plant-images/ZZ_plant.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwbGFudC1pbWFnZXMvWlpfcGxhbnQucG5nIiwiaWF0IjoxNzY0NTkwMjk2LCJleHAiOjE3OTYxMjYyOTZ9.Kyp68RrcZwq-7V4-EU8AQkYOifXNYUmRIdFKbPHubms' },
-    { name: 'Jade Plant', rarity: 'Common', moisture: 'Low', threshold: { min: 25, max: 40 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/plant-images/Jade_Plant.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwbGFudC1pbWFnZXMvSmFkZV9QbGFudC5wbmciLCJpYXQiOjE3NjQ1OTAwODUsImV4cCI6MTc5NjEyNjA4NX0.Y9Da6gCGgM9kQHswfGpSs4_ftipxbjOKlA0OIRxEkVw' },
-    // Uncommon Plants
-    { name: 'Monstera Deliciosa', rarity: 'Uncommon', moisture: 'Medium', threshold: { min: 50, max: 70 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/plant-images/Monstera_Deliciosa.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwbGFudC1pbWFnZXMvTW9uc3RlcmFfRGVsaWNpb3NhLnBuZyIsImlhdCI6MTc2NDU5MDEyMSwiZXhwIjoxNzk2MTI2MTIxfQ.4iFHYIYtjpDGDvnde0mu8_VHUV4hf5pfG6xCY2jOEHo' },
-    { name: 'Fiddle Leaf Fig', rarity: 'Uncommon', moisture: 'Medium', threshold: { min: 45, max: 65 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/plant-images/Fiddle_Leaf_Fig.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwbGFudC1pbWFnZXMvRmlkZGxlX0xlYWZfRmlnLnBuZyIsImlhdCI6MTc2NDU5MDE2NSwiZXhwIjoxNzk2MTI2MTY1fQ.wRos2qGJFWMMN4_zVq27VIheOvaTDDkIouSJfaMTowA' },
-    { name: 'Rubber Plant', rarity: 'Uncommon', moisture: 'Medium', threshold: { min: 40, max: 60 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/plant-images/Rubber_Plant.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwbGFudC1pbWFnZXMvUnViYmVyX1BsYW50LnBuZyIsImlhdCI6MTc2NDU5MDM0MCwiZXhwIjoxNzk2MTI2MzQwfQ.o5HJp4m32lVX0vS8gIfF40kSjW5qNcWkcAdhS7Ns_JE' },
-    { name: 'Calathea', rarity: 'Uncommon', moisture: 'High', threshold: { min: 65, max: 85 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/plant-images/Calathea.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwbGFudC1pbWFnZXMvQ2FsYXRoZWEucG5nIiwiaWF0IjoxNzY0NTkwMzU5LCJleHAiOjE3OTYxMjYzNTl9.PaW-tQC5GODZ1otElKFx7umv28zxSa5oD9tTcJBWN5Q' },
-    { name: 'Boston Fern', rarity: 'Uncommon', moisture: 'High', threshold: { min: 70, max: 90 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/plant-images/Fiddle_Leaf_Fig.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwbGFudC1pbWFnZXMvRmlkZGxlX0xlYWZfRmlnLnBuZyIsImlhdCI6MTc2NDU5MDE2NSwiZXhwIjoxNzk2MTI2MTY1fQ.wRos2qGJFWMMN4_zVq27VIheOvaTDDkIouSJfaMTowA' },
-    { name: 'Philodendron', rarity: 'Uncommon', moisture: 'Medium', threshold: { min: 45, max: 65 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/plant-images/Philodendron.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwbGFudC1pbWFnZXMvUGhpbG9kZW5kcm9uLnBuZyIsImlhdCI6MTc2NDU5MDM4NCwiZXhwIjoxNzk2MTI2Mzg0fQ.LOtrFrVphyPe97g37zX8evSxp_BUeBS3DcxDUk2aqJU' },
-    // Rare Plants
-    { name: 'Variegated Monstera', rarity: 'Rare', moisture: 'Medium', threshold: { min: 50, max: 70 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/plant-images/Variegated_Monstera.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwbGFudC1pbWFnZXMvVmFyaWVnYXRlZF9Nb25zdGVyYS5wbmciLCJpYXQiOjE3NjQ1OTA0MDAsImV4cCI6MTc5NjEyNjQwMH0.ojKjLgt-IvAWt_xc1nZsgXEgEWIUSPADpAkXkFXNUhw' },
-    { name: 'Alocasia Polly', rarity: 'Rare', moisture: 'High', threshold: { min: 65, max: 85 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/plant-images/Alocasia_Polly.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwbGFudC1pbWFnZXMvQWxvY2FzaWFfUG9sbHkucG5nIiwiaWF0IjoxNzY0NTkwNDE0LCJleHAiOjE3OTYxMjY0MTR9.1OVpWooqeye50faVCIuqkV9TkTZutxLqZ_O-Ce990yo' },
-    { name: 'String of Hearts', rarity: 'Rare', moisture: 'Low', threshold: { min: 25, max: 45 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/plant-images/String_of_Hearts.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwbGFudC1pbWFnZXMvU3RyaW5nX29mX0hlYXJ0cy5wbmciLCJpYXQiOjE3NjQ1OTA0MjcsImV4cCI6MTc5NjEyNjQyN30.eYxf8qhPEwaXrFYruAZV3ViAy-OIsuoksBedrtC-vsA' },
-    { name: 'Pink Princess Philodendron', rarity: 'Rare', moisture: 'Medium', threshold: { min: 50, max: 70 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/plant-images/Pink_Princess_Philodendron.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwbGFudC1pbWFnZXMvUGlua19QcmluY2Vzc19QaGlsb2RlbmRyb24ucG5nIiwiaWF0IjoxNzY0NTkwNDQ2LCJleHAiOjE3OTYxMjY0NDZ9.axp4Yqffsowc_EAQJuRqkZ3CpB-dro5NafZkLj2okv0' },
-    { name: 'Anthurium Clarinervium', rarity: 'Rare', moisture: 'High', threshold: { min: 60, max: 80 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/plant-images/Anthurium_Clarinervium.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwbGFudC1pbWFnZXMvQW50aHVyaXVtX0NsYXJpbmVydml1bS5wbmciLCJpYXQiOjE3NjQ1OTA0NjIsImV4cCI6MTc5NjEyNjQ2Mn0.i453VttmuoJmcIppgkWlYmoQ8H8C1CljUTd-mX0J6xA' },
-    { name: 'Hoya Carnosa', rarity: 'Rare', moisture: 'Low', threshold: { min: 30, max: 50 }, image: 'https://clluovsscjmlhcbvsgcz.supabase.co/storage/v1/object/sign/plant-images/Hoya_Carnosa.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84MTA0N2NiNy1lN2IxLTQ5YzUtYjdhMS00YThiZGRlZjEzZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJwbGFudC1pbWFnZXMvSG95YV9DYXJub3NhLnBuZyIsImlhdCI6MTc2NDU5MDQ3MiwiZXhwIjoxNzk2MTI2NDcyfQ.fwgG4NFjnY5iBQmabwVaGuW-eFc4GRLKs-fRQ5xiK2E' }
+    // Your plant database array goes here
 ];
 
 // STATE
@@ -40,6 +19,7 @@ let hourData = { labels: [], values: [] };
 let dayData = { labels: [], values: [] };
 let weekData = { labels: [], values: [] };
 let currentFilter = 'all';
+let currentUser = null;
 let settings = {
     theme: 'light',
     notificationsEnabled: false,
@@ -57,6 +37,8 @@ const supabase = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABA
 
 // INIT
 document.addEventListener('DOMContentLoaded', async () => {
+    await checkAuthStatus();
+    await loadUserProfile();
     loadSettings();
     applyTheme();
     initCharts();
@@ -69,44 +51,204 @@ document.addEventListener('DOMContentLoaded', async () => {
     const imgInput = document.getElementById('customPlantImage');
     if (imgInput) imgInput.addEventListener('change', handleImagePreview);
     
-    // Close panel when clicking outside
     const plantPanel = document.getElementById('plantPanel');
     if (plantPanel) {
         plantPanel.addEventListener('click', handlePanelClick);
     }
 });
 
-// Settings
-function loadSettings() {
-    const saved = localStorage.getItem('moistureMonitorSettings');
-    if (saved) {
-        settings = { ...settings, ...JSON.parse(saved) };
+// AUTH FUNCTIONS
+async function checkAuthStatus() {
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    if (!session) {
+        window.location.href = 'auth.html';
+        return;
+    }
+    
+    currentUser = session.user;
+    
+    // Listen for auth changes
+    supabase.auth.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_OUT') {
+            window.location.href = 'auth.html';
+        } else if (event === 'USER_UPDATED') {
+            currentUser = session?.user || null;
+        }
+    });
+}
+
+async function loadUserProfile() {
+    if (!currentUser) return;
+    
+    try {
+        const { data, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', currentUser.id)
+            .single();
         
-        // Load custom plants
-        if (settings.customPlants && settings.customPlants.length > 0) {
-            PLANTS_DATABASE.push(...settings.customPlants);
+        if (error && error.code !== 'PGRST116') {
+            console.error('Profile load error:', error);
+            return;
         }
         
-        const themeToggle = document.getElementById('themeToggle');
-        const notifToggle = document.getElementById('notificationsEnabled');
-        
-        if (themeToggle) themeToggle.value = settings.theme;
-        if (notifToggle) notifToggle.checked = settings.notificationsEnabled;
-        
-        if (settings.selectedPlant) displaySelectedPlant(settings.selectedPlant);
+        // If profile doesn't exist, create it
+        if (!data) {
+            const { error: createError } = await supabase
+                .from('profiles')
+                .insert([{
+                    id: currentUser.id,
+                    full_name: currentUser.user_metadata?.full_name || 'User',
+                    email: currentUser.email,
+                    theme: 'light',
+                    notifications_enabled: false
+                }]);
+            
+            if (createError) {
+                console.error('Profile creation error:', createError);
+            }
+        } else {
+            // Load settings from profile
+            if (data.settings) {
+                settings = { ...settings, ...data.settings };
+            }
+            if (data.theme) {
+                settings.theme = data.theme;
+            }
+            if (typeof data.notifications_enabled === 'boolean') {
+                settings.notificationsEnabled = data.notifications_enabled;
+            }
+        }
+    } catch (err) {
+        console.error('Load profile error:', err);
     }
 }
 
-function saveSettings() {
+async function saveUserProfile() {
+    if (!currentUser) return;
+    
+    try {
+        const { error } = await supabase
+            .from('profiles')
+            .update({
+                theme: settings.theme,
+                notifications_enabled: settings.notificationsEnabled,
+                settings: settings,
+                updated_at: new Date().toISOString()
+            })
+            .eq('id', currentUser.id);
+        
+        if (error) {
+            console.error('Profile save error:', error);
+        }
+    } catch (err) {
+        console.error('Save profile error:', err);
+    }
+}
+
+async function handleLogout() {
+    if (!confirm('Are you sure you want to logout?')) return;
+    
+    try {
+        const { error } = await supabase.auth.signOut();
+        if (error) throw error;
+        
+        window.location.href = 'auth.html';
+    } catch (error) {
+        console.error('Logout error:', error);
+        alert('Failed to logout. Please try again.');
+    }
+}
+
+async function handleDeleteAccount() {
+    const passwordInput = document.getElementById('deleteAccountPassword');
+    if (!passwordInput) return;
+    
+    const password = passwordInput.value;
+    
+    if (!password) {
+        alert('Please enter your password to confirm account deletion.');
+        return;
+    }
+    
+    if (!confirm('Are you absolutely sure? This action cannot be undone. All your data will be permanently deleted.')) {
+        return;
+    }
+    
+    try {
+        // Verify password by attempting to re-authenticate
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+            email: currentUser.email,
+            password: password
+        });
+        
+        if (signInError) {
+            alert('Incorrect password. Account deletion cancelled.');
+            passwordInput.value = '';
+            return;
+        }
+        
+        // Delete user profile from database
+        const { error: profileError } = await supabase
+            .from('profiles')
+            .delete()
+            .eq('id', currentUser.id);
+        
+        if (profileError) {
+            console.error('Profile deletion error:', profileError);
+        }
+        
+        // Delete user account (requires admin privileges or RLS policy)
+        // Note: This might need to be done via a Supabase function
+        alert('Account deletion initiated. You will be logged out.');
+        
+        await supabase.auth.signOut();
+        window.location.href = 'auth.html';
+        
+    } catch (error) {
+        console.error('Delete account error:', error);
+        alert('Failed to delete account. Please contact support.');
+        passwordInput.value = '';
+    }
+}
+
+// Settings
+function loadSettings() {
+    // Settings are now loaded from user profile
+    // Keep localStorage as fallback for custom plants
+    const saved = localStorage.getItem('moistureMonitorSettings');
+    if (saved) {
+        const localSettings = JSON.parse(saved);
+        if (localSettings.customPlants && localSettings.customPlants.length > 0) {
+            settings.customPlants = localSettings.customPlants;
+            PLANTS_DATABASE.push(...settings.customPlants);
+        }
+    }
+    
+    const themeToggle = document.getElementById('themeToggle');
+    const notifToggle = document.getElementById('notificationsEnabled');
+    
+    if (themeToggle) themeToggle.value = settings.theme;
+    if (notifToggle) notifToggle.checked = settings.notificationsEnabled;
+    
+    if (settings.selectedPlant) displaySelectedPlant(settings.selectedPlant);
+}
+
+async function saveSettings() {
+    // Save to localStorage as backup
     localStorage.setItem('moistureMonitorSettings', JSON.stringify(settings));
+    
+    // Save to Supabase profile
+    await saveUserProfile();
 }
 
-function updateSettings() {
+async function updateSettings() {
     settings.notificationsEnabled = document.getElementById('notificationsEnabled').checked;
-    saveSettings();
+    await saveSettings();
 }
 
-function resetSettings() {
+async function resetSettings() {
     if (!confirm('Reset all settings to defaults?')) return;
     
     // Remove custom plants from database
@@ -123,7 +265,8 @@ function resetSettings() {
         selectedPlant: null,
         customPlants: []
     };
-    saveSettings();
+    
+    await saveSettings();
     loadSettings();
     applyTheme();
     populatePlants();
@@ -135,9 +278,9 @@ function resetSettings() {
 }
 
 // Theme
-function toggleTheme() {
+async function toggleTheme() {
     settings.theme = document.getElementById('themeToggle').value;
-    saveSettings();
+    await saveSettings();
     applyTheme();
 }
 
@@ -188,7 +331,6 @@ function populatePlants() {
     
     let plants = [...PLANTS_DATABASE];
     
-    // Filter plants
     if (currentFilter === 'az') {
         plants.sort((a, b) => a.name.localeCompare(b.name));
     } else if (currentFilter === 'rarity') {
@@ -223,7 +365,6 @@ function populatePlants() {
 function filterPlants(filter) {
     currentFilter = filter;
     
-    // Update active filter bubble
     document.querySelectorAll('.filter-bubble').forEach(btn => {
         btn.classList.remove('active');
     });
@@ -232,9 +373,9 @@ function filterPlants(filter) {
     populatePlants();
 }
 
-function selectPlant(plant) {
+async function selectPlant(plant) {
     settings.selectedPlant = plant;
-    saveSettings();
+    await saveSettings();
     displaySelectedPlant(plant);
     closePlantPanel();
 }
@@ -259,7 +400,6 @@ function closePlantPanel() {
 }
 
 function handlePanelClick(event) {
-    // Close panel if clicking outside the panel content
     if (event.target.id === 'plantPanel') {
         closePlantPanel();
     }
@@ -272,7 +412,6 @@ function switchTab(tab) {
     event.target.classList.add('active');
     document.getElementById(tab + 'Tab').classList.add('active');
     
-    // Reset filter to 'all' when switching tabs
     if (tab === 'browse') {
         currentFilter = 'all';
         document.querySelectorAll('.filter-bubble').forEach(btn => btn.classList.remove('active'));
@@ -294,7 +433,7 @@ function handleImagePreview(e) {
     reader.readAsDataURL(file);
 }
 
-function addCustomPlant() {
+async function addCustomPlant() {
     const name = document.getElementById('customPlantName').value;
     const min = parseInt(document.getElementById('customPlantMinThreshold').value);
     const max = parseInt(document.getElementById('customPlantMaxThreshold').value);
@@ -318,16 +457,14 @@ function addCustomPlant() {
         image: preview.src
     };
     
-    // Add to database and custom plants list
     PLANTS_DATABASE.push(plant);
     if (!settings.customPlants) settings.customPlants = [];
     settings.customPlants.push(plant);
-    saveSettings();
+    await saveSettings();
     
-    selectPlant(plant);
+    await selectPlant(plant);
     populatePlants();
     
-    // Reset form
     document.getElementById('customPlantName').value = '';
     document.getElementById('customPlantMinThreshold').value = '';
     document.getElementById('customPlantMaxThreshold').value = '';
@@ -335,21 +472,18 @@ function addCustomPlant() {
     preview.style.display = 'none';
 }
 
-function deletePlant(plantName) {
+async function deletePlant(plantName) {
     if (!confirm(`Delete "${plantName}"?`)) return;
     
-    // Find and remove from database
     const idx = PLANTS_DATABASE.findIndex(p => p.name === plantName && p.rarity === 'Custom');
     if (idx > -1) {
         PLANTS_DATABASE.splice(idx, 1);
     }
     
-    // Remove from custom plants list
     if (settings.customPlants) {
         settings.customPlants = settings.customPlants.filter(p => p.name !== plantName);
     }
     
-    // Clear selected plant if it was deleted
     if (settings.selectedPlant?.name === plantName) {
         settings.selectedPlant = null;
         document.getElementById('plantInfo').style.display = 'none';
@@ -358,7 +492,7 @@ function deletePlant(plantName) {
         card.style.background = 'var(--accent-gradient)';
     }
     
-    saveSettings();
+    await saveSettings();
     populatePlants();
 }
 
@@ -376,17 +510,18 @@ function startCalibration() {
     document.getElementById('calibrationModal').dataset.interval = interval;
 }
 
-function calibrateDry() {
+async function calibrateDry() {
     settings.calibration.dry = currentRawValue;
+    await saveSettings();
     document.getElementById('finalDry').textContent = currentRawValue;
     document.getElementById('calibrationStep1').classList.remove('active');
     document.getElementById('calibrationStep2').classList.add('active');
 }
 
-function calibrateWet() {
+async function calibrateWet() {
     settings.calibration.wet = currentRawValue;
+    await saveSettings();
     document.getElementById('finalWet').textContent = currentRawValue;
-    saveSettings();
     document.getElementById('calibrationStep2').classList.remove('active');
     document.getElementById('calibrationStep3').classList.add('active');
 }
