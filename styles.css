@@ -186,6 +186,71 @@ header h1 {
     background-color: var(--bg-tertiary);
 }
 
+.menu-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+}
+
+.btn-logout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 16px;
+    background: transparent;
+    border: 2px solid var(--danger-color);
+    border-radius: 8px;
+    color: var(--danger-color);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-logout:hover {
+    background: var(--danger-color);
+    color: white;
+}
+
+.btn-logout .nav-icon {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    fill: currentColor;
+}
+
+/* Adjust menu content to make room for footer */
+.menu-content {
+    padding-bottom: 80px;
+}
+
+/* Delete Account Button */
+.btn-danger {
+    padding: 0.75rem 1.5rem;
+    background: transparent;
+    color: var(--danger-color);
+    border: 2px solid var(--danger-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+}
+
+.btn-danger:hover {
+    background: var(--danger-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
 .nav-icon {
     width: 24px;
     height: 24px;

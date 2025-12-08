@@ -243,30 +243,6 @@
             text-decoration: underline;
         }
 
-        .divider {
-            display: flex;
-            align-items: center;
-            margin: 1.5rem 0;
-            color: var(--text-tertiary);
-            font-size: 0.9rem;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--border-color);
-        }
-
-        .divider::before {
-            margin-right: 1rem;
-        }
-
-        .divider::after {
-            margin-left: 1rem;
-        }
-
         .loading-spinner {
             display: inline-block;
             width: 16px;
@@ -316,13 +292,13 @@
             <form id="loginForm" class="auth-form active">
                 <div class="form-group">
                     <label for="loginEmail">Email</label>
-                    <input type="email" id="loginEmail" placeholder="your@email.com" required>
+                    <input type="email" id="loginEmail" placeholder="your@email.com" required autocomplete="email">
                 </div>
 
                 <div class="form-group">
                     <label for="loginPassword">Password</label>
                     <div class="password-toggle">
-                        <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                        <input type="password" id="loginPassword" placeholder="Enter your password" required autocomplete="current-password">
                         <button type="button" class="password-toggle-btn" onclick="togglePassword('loginPassword')">👁️</button>
                     </div>
                 </div>
@@ -338,18 +314,18 @@
             <form id="signupForm" class="auth-form">
                 <div class="form-group">
                     <label for="signupName">Full Name</label>
-                    <input type="text" id="signupName" placeholder="John Doe" required>
+                    <input type="text" id="signupName" placeholder="John Doe" required autocomplete="name">
                 </div>
 
                 <div class="form-group">
                     <label for="signupEmail">Email</label>
-                    <input type="email" id="signupEmail" placeholder="your@email.com" required>
+                    <input type="email" id="signupEmail" placeholder="your@email.com" required autocomplete="email">
                 </div>
 
                 <div class="form-group">
                     <label for="signupPassword">Password</label>
                     <div class="password-toggle">
-                        <input type="password" id="signupPassword" placeholder="Create a password (min 6 characters)" required minlength="6">
+                        <input type="password" id="signupPassword" placeholder="Create a password (min 6 characters)" required minlength="6" autocomplete="new-password">
                         <button type="button" class="password-toggle-btn" onclick="togglePassword('signupPassword')">👁️</button>
                     </div>
                 </div>
@@ -357,7 +333,7 @@
                 <div class="form-group">
                     <label for="signupPasswordConfirm">Confirm Password</label>
                     <div class="password-toggle">
-                        <input type="password" id="signupPasswordConfirm" placeholder="Confirm your password" required minlength="6">
+                        <input type="password" id="signupPasswordConfirm" placeholder="Confirm your password" required minlength="6" autocomplete="new-password">
                         <button type="button" class="password-toggle-btn" onclick="togglePassword('signupPasswordConfirm')">👁️</button>
                     </div>
                 </div>
@@ -369,7 +345,7 @@
             <form id="resetForm" class="auth-form">
                 <div class="form-group">
                     <label for="resetEmail">Email</label>
-                    <input type="email" id="resetEmail" placeholder="your@email.com" required>
+                    <input type="email" id="resetEmail" placeholder="your@email.com" required autocomplete="email">
                 </div>
 
                 <button type="submit" class="btn-primary">Send Reset Link</button>
@@ -381,181 +357,6 @@
         </div>
     </div>
 
-    <script>
-        // Configuration
-        const SUPABASE_URL = 'https://clluovsscjmlhcbvsgcz.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsbHVvdnNzY2ptbGhjYnZzZ2N6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQwNjI5NTYsImV4cCI6MjA3OTYzODk1Nn0.5MDrr1886qiUCyCLUB2BxLBSviQ-Ehs47-CGJi_95C8';
-
-        // Initialize Supabase
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        // Check if user is already logged in
-        checkAuth();
-
-        async function checkAuth() {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                window.location.href = 'index.html';
-            }
-        }
-
-        // Tab switching
-        function switchAuthTab(tab) {
-            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
-
-            if (tab === 'login') {
-                document.querySelector('.auth-tab:first-child').classList.add('active');
-                document.getElementById('loginForm').classList.add('active');
-            } else if (tab === 'signup') {
-                document.querySelector('.auth-tab:last-child').classList.add('active');
-                document.getElementById('signupForm').classList.add('active');
-            }
-
-            hideAlert();
-        }
-
-        function showResetPassword() {
-            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
-            document.getElementById('resetForm').classList.add('active');
-            hideAlert();
-        }
-
-        // Password toggle
-        function togglePassword(inputId) {
-            const input = document.getElementById(inputId);
-            input.type = input.type === 'password' ? 'text' : 'password';
-        }
-
-        // Alert functions
-        function showAlert(message, type = 'error') {
-            const alertBox = document.getElementById('alertBox');
-            alertBox.textContent = message;
-            alertBox.className = `alert ${type} show`;
-        }
-
-        function hideAlert() {
-            const alertBox = document.getElementById('alertBox');
-            alertBox.classList.remove('show');
-        }
-
-        // Login form handler
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = e.target.querySelector('button');
-            const originalText = btn.textContent;
-
-            try {
-                btn.disabled = true;
-                btn.innerHTML = '<span class="loading-spinner"></span>Signing in...';
-                hideAlert();
-
-                const email = document.getElementById('loginEmail').value;
-                const password = document.getElementById('loginPassword').value;
-
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email,
-                    password
-                });
-
-                if (error) throw error;
-
-                showAlert('Login successful! Redirecting...', 'success');
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1000);
-
-            } catch (error) {
-                showAlert(error.message || 'Login failed. Please try again.');
-                btn.disabled = false;
-                btn.textContent = originalText;
-            }
-        });
-
-        // Signup form handler
-        document.getElementById('signupForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = e.target.querySelector('button');
-            const originalText = btn.textContent;
-
-            try {
-                btn.disabled = true;
-                btn.innerHTML = '<span class="loading-spinner"></span>Creating account...';
-                hideAlert();
-
-                const name = document.getElementById('signupName').value;
-                const email = document.getElementById('signupEmail').value;
-                const password = document.getElementById('signupPassword').value;
-                const passwordConfirm = document.getElementById('signupPasswordConfirm').value;
-
-                // Validate passwords match
-                if (password !== passwordConfirm) {
-                    throw new Error('Passwords do not match');
-                }
-
-                // Sign up user
-                const { data, error } = await supabase.auth.signUp({
-                    email,
-                    password,
-                    options: {
-                        data: {
-                            full_name: name
-                        }
-                    }
-                });
-
-                if (error) throw error;
-
-                showAlert('Account created! Please check your email to verify your account.', 'success');
-                
-                // Clear form
-                e.target.reset();
-                
-                // Switch to login after 3 seconds
-                setTimeout(() => {
-                    switchAuthTab('login');
-                }, 3000);
-
-            } catch (error) {
-                showAlert(error.message || 'Signup failed. Please try again.');
-                btn.disabled = false;
-                btn.textContent = originalText;
-            }
-        });
-
-        // Reset password form handler
-        document.getElementById('resetForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = e.target.querySelector('button');
-            const originalText = btn.textContent;
-
-            try {
-                btn.disabled = true;
-                btn.innerHTML = '<span class="loading-spinner"></span>Sending...';
-                hideAlert();
-
-                const email = document.getElementById('resetEmail').value;
-
-                const { error } = await supabase.auth.resetPasswordForEmail(email, {
-                    redirectTo: `${window.location.origin}/reset-password.html`
-                });
-
-                if (error) throw error;
-
-                showAlert('Password reset link sent! Check your email.', 'success');
-                e.target.reset();
-
-                setTimeout(() => {
-                    switchAuthTab('login');
-                }, 3000);
-
-            } catch (error) {
-                showAlert(error.message || 'Failed to send reset link.');
-                btn.disabled = false;
-                btn.textContent = originalText;
-            }
-        });
-    </script>
+    <script src="auth.js"></script>
 </body>
 </html>
