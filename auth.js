@@ -148,17 +148,36 @@ async function handleSignup(event) {
     btn.innerHTML = '<span class="loading-spinner"></span>Creating Account...';
     
     try {
+        // Attempt to sign up
         const { data, error } = await supabase.auth.signUp({
             email: email,
             password: password,
             options: {
                 data: {
                     full_name: name
-                }
+                },
+                emailRedirectTo: `${window.location.origin}/index.html`
             }
         });
         
         if (error) throw error;
+        
+        // Check if this is a duplicate signup attempt
+        // Supabase returns a user object even for existing emails but with identities: []
+        if (data.user && data.user.identities && data.user.identities.length === 0) {
+            // This email is already registered
+            showAlert('An account with this email already exists. Please login or use password reset if you forgot your password.', 'error');
+            
+            // Switch to login form after showing error
+            setTimeout(() => {
+                switchAuthTab('login');
+                document.getElementById('loginEmail').value = email;
+            }, 3000);
+            
+            btn.disabled = false;
+            btn.innerHTML = 'Create Account';
+            return;
+        }
         
         // Check if email confirmation is required
         if (data.user && !data.session) {
@@ -170,7 +189,7 @@ async function handleSignup(event) {
                 document.getElementById('loginEmail').value = email;
             }, 3000);
         } else {
-            // Auto-login successful
+            // Auto-login successful (email confirmation disabled)
             showAlert('Account created successfully! Redirecting...', 'success');
             setTimeout(() => {
                 window.location.href = 'index.html';
@@ -185,8 +204,19 @@ async function handleSignup(event) {
         
         if (error.message.includes('User already registered')) {
             errorMessage = 'An account with this email already exists. Please login instead.';
+            // Switch to login tab
+            setTimeout(() => {
+                switchAuthTab('login');
+                document.getElementById('loginEmail').value = email;
+            }, 2000);
         } else if (error.message.includes('Password should be at least 6 characters')) {
             errorMessage = 'Password must be at least 6 characters long.';
+        } else if (error.message.includes('already been registered')) {
+            errorMessage = 'This email is already registered. Please login or reset your password.';
+            setTimeout(() => {
+                switchAuthTab('login');
+                document.getElementById('loginEmail').value = email;
+            }, 2000);
         } else if (error.message) {
             errorMessage = error.message;
         }
