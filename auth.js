@@ -73,6 +73,36 @@ function hideAlert() {
     alertBox.classList.remove('show');
 }
 
+// Create user profile
+async function createUserProfile(userId, email, fullName) {
+    try {
+        const { error } = await supabase
+            .from('profiles')
+            .insert([{
+                id: userId,
+                email: email,
+                full_name: fullName,
+                theme: 'light',
+                notifications_enabled: false,
+                settings: {}
+            }]);
+        
+        if (error) {
+            // If it's a duplicate key error, that's okay - profile already exists
+            if (error.code === '23505') {
+                console.log('Profile already exists');
+                return true;
+            }
+            throw error;
+        }
+        
+        return true;
+    } catch (err) {
+        console.error('Error creating profile:', err);
+        return false;
+    }
+}
+
 // Handle login
 async function handleLogin(event) {
     event.preventDefault();
@@ -177,6 +207,25 @@ async function handleSignup(event) {
             btn.disabled = false;
             btn.innerHTML = 'Create Account';
             return;
+        }
+        
+        // If user was created, ensure profile exists
+        if (data.user) {
+            // Wait a moment for trigger to execute
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // Check if profile exists
+            const { data: profileData } = await supabase
+                .from('profiles')
+                .select('id')
+                .eq('id', data.user.id)
+                .single();
+            
+            // If profile doesn't exist, create it manually
+            if (!profileData) {
+                console.log('Profile not found, creating manually...');
+                await createUserProfile(data.user.id, email, name);
+            }
         }
         
         // Check if email confirmation is required
