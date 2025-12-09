@@ -948,8 +948,6 @@ main {
 }
 
 .calibration-step {
-
-.calibration-step {
     display: none;
     margin-bottom: 1.5rem;
 }
@@ -1260,4 +1258,4 @@ main {
 @media (max-width: 480px) {
     .stats-grid { grid-template-columns: 1fr; }
     .connection-status { display: none; }
-}}
+}
