@@ -218,6 +218,16 @@ async function handleLogout() {
     }
 }
 
+function openDeleteAccountModal() {
+    document.getElementById('deleteAccountModal').style.display = 'flex';
+    document.getElementById('deleteAccountPassword').value = '';
+}
+
+function closeDeleteAccountModal() {
+    document.getElementById('deleteAccountModal').style.display = 'none';
+    document.getElementById('deleteAccountPassword').value = '';
+}
+
 async function handleDeleteAccount() {
     const passwordInput = document.getElementById('deleteAccountPassword');
     if (!passwordInput) return;
@@ -230,7 +240,7 @@ async function handleDeleteAccount() {
     }
     
     if (!confirm('Are you absolutely sure? This action cannot be undone. All your data will be permanently deleted.')) {
-        passwordInput.value = '';
+        closeDeleteAccountModal();
         return;
     }
     
@@ -245,7 +255,7 @@ async function handleDeleteAccount() {
         
         if (signInError) {
             alert('Incorrect password. Account deletion cancelled.');
-            passwordInput.value = '';
+            closeDeleteAccountModal();
             return;
         }
         
@@ -270,7 +280,7 @@ async function handleDeleteAccount() {
     } catch (error) {
         console.error('Delete account error:', error);
         alert('Failed to delete account. Please try again or contact support.');
-        passwordInput.value = '';
+        closeDeleteAccountModal();
     }
 }
 

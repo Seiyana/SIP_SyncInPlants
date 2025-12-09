@@ -249,18 +249,10 @@
                             <button class="btn-primary" onclick="startCalibration()">Start Calibration</button>
                         </div>
 
-                        <div class="setting-group">
-                            <label>
-                                <strong>Delete Account</strong>
-                                <p class="setting-description">Permanently delete your account and all data</p>
-                            </label>
-                            <div class="form-group">
-                                <input type="password" id="deleteAccountPassword" placeholder="Enter your password to confirm" style="margin-bottom: 0.5rem;">
-                            </div>
-                            <button class="btn-danger" onclick="handleDeleteAccount()">Delete My Account</button>
+                        <div class="settings-actions">
+                            <button class="btn-secondary" onclick="resetSettings()">Reset to Defaults</button>
+                            <button class="btn-danger" onclick="openDeleteAccountModal()">Delete Account</button>
                         </div>
-
-                        <button class="btn-secondary" onclick="resetSettings()">Reset to Defaults</button>
                     </div>
                 </div>
             </div>
@@ -395,6 +387,21 @@
         </div>
 
     </main>
+    <!-- Delete Account Modal -->
+    <div id="deleteAccountModal" class="modal">
+        <div class="modal-content">
+            <h2>Delete Account</h2>
+            <p class="modal-warning">Permanently delete your account and all data</p>
+            <div class="form-group">
+                <label for="deleteAccountPassword">Enter your password to confirm</label>
+                <input type="password" id="deleteAccountPassword" placeholder="Enter your password">
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeDeleteAccountModal()">Cancel</button>
+                <button class="btn-danger" onclick="handleDeleteAccount()">Confirm Delete</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Calibration Modal -->
     <div id="calibrationModal" class="modal">

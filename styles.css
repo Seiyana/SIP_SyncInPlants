@@ -891,6 +891,15 @@ main {
     border-color: var(--accent-primary);
 }
 
+.settings-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
 .modal {
     display: none;
     position: fixed;
@@ -916,9 +925,29 @@ main {
 }
 
 .modal-content h2 {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     color: var(--text-primary);
 }
+
+.modal-warning {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    justify-content: flex-end;
+}
+
+.modal-actions button {
+    flex: 1;
+    max-width: 150px;
+}
+
+.calibration-step {
 
 .calibration-step {
     display: none;
@@ -1223,6 +1252,9 @@ main {
     .plants-grid { grid-template-columns: 1fr; }
     .threshold-inputs { grid-template-columns: 1fr; }
     .charts-row { grid-template-columns: 1fr; }
+    .settings-actions { flex-direction: column; }
+    .modal-actions { flex-direction: column; }
+    .modal-actions button { max-width: 100%; }
 }
 
 @media (max-width: 480px) {
