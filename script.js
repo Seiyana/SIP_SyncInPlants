@@ -116,6 +116,7 @@ async function loadUserProfile() {
         
         // If profile doesn't exist, create it
         if (!data) {
+            console.log('Creating new profile...');
             const { error: createError } = await supabase
                 .from('profiles')
                 .insert([{
@@ -123,7 +124,12 @@ async function loadUserProfile() {
                     full_name: currentUser.user_metadata?.full_name || 'User',
                     email: currentUser.email,
                     theme: 'light',
-                    notifications_enabled: false
+                    notifications_enabled: false,
+                    settings: {
+                        calibration: { dry: 3200, wet: 1200 },
+                        selectedPlant: null,
+                        customPlants: []
+                    }
                 }]);
             
             if (createError) {
@@ -131,15 +137,34 @@ async function loadUserProfile() {
             }
         } else {
             // Load settings from profile
-            if (data.settings) {
-                settings = { ...settings, ...data.settings };
-            }
+            console.log('Loading profile settings:', data);
+            
+            // Load theme
             if (data.theme) {
                 settings.theme = data.theme;
             }
+            
+            // Load notifications
             if (typeof data.notifications_enabled === 'boolean') {
                 settings.notificationsEnabled = data.notifications_enabled;
             }
+            
+            // Load other settings from settings JSON column
+            if (data.settings) {
+                if (data.settings.calibration) {
+                    settings.calibration = data.settings.calibration;
+                }
+                if (data.settings.selectedPlant) {
+                    settings.selectedPlant = data.settings.selectedPlant;
+                }
+                if (data.settings.customPlants && data.settings.customPlants.length > 0) {
+                    settings.customPlants = data.settings.customPlants;
+                    // Add custom plants to database
+                    PLANTS_DATABASE.push(...settings.customPlants);
+                }
+            }
+            
+            console.log('Settings loaded:', settings);
         }
     } catch (err) {
         console.error('Load profile error:', err);
@@ -150,18 +175,26 @@ async function saveUserProfile() {
     if (!currentUser) return;
     
     try {
+        console.log('Saving profile with settings:', settings);
+        
         const { error } = await supabase
             .from('profiles')
             .update({
                 theme: settings.theme,
                 notifications_enabled: settings.notificationsEnabled,
-                settings: settings,
+                settings: {
+                    calibration: settings.calibration,
+                    selectedPlant: settings.selectedPlant,
+                    customPlants: settings.customPlants
+                },
                 updated_at: new Date().toISOString()
             })
             .eq('id', currentUser.id);
         
         if (error) {
             console.error('Profile save error:', error);
+        } else {
+            console.log('Profile saved successfully');
         }
     } catch (err) {
         console.error('Save profile error:', err);
@@ -172,6 +205,9 @@ async function handleLogout() {
     if (!confirm('Are you sure you want to logout?')) return;
     
     try {
+        // Save settings before logout
+        await saveUserProfile();
+        
         const { error } = await supabase.auth.signOut();
         if (error) throw error;
         
@@ -194,13 +230,16 @@ async function handleDeleteAccount() {
     }
     
     if (!confirm('Are you absolutely sure? This action cannot be undone. All your data will be permanently deleted.')) {
+        passwordInput.value = '';
         return;
     }
     
     try {
-        // Verify password by attempting to re-authenticate
+        const userEmail = currentUser.email;
+        
+        // First, verify password by attempting to re-authenticate
         const { error: signInError } = await supabase.auth.signInWithPassword({
-            email: currentUser.email,
+            email: userEmail,
             password: password
         });
         
@@ -210,7 +249,7 @@ async function handleDeleteAccount() {
             return;
         }
         
-        // Delete user profile from database
+        // Delete user profile from database first
         const { error: profileError } = await supabase
             .from('profiles')
             .delete()
@@ -220,46 +259,38 @@ async function handleDeleteAccount() {
             console.error('Profile deletion error:', profileError);
         }
         
-        // Delete user account (requires admin privileges or RLS policy)
-        // Note: This might need to be done via a Supabase function
-        alert('Account deletion initiated. You will be logged out.');
-        
+        // Sign out the user (this will trigger redirect to auth page)
         await supabase.auth.signOut();
-        window.location.href = 'auth.html';
+        
+        // Show message before redirect
+        alert('Your profile has been deleted. You have been logged out. To completely delete your account, please contact support or use the Supabase dashboard.');
+        
+        // Redirect will happen automatically via onAuthStateChange
         
     } catch (error) {
         console.error('Delete account error:', error);
-        alert('Failed to delete account. Please contact support.');
+        alert('Failed to delete account. Please try again or contact support.');
         passwordInput.value = '';
     }
 }
 
 // Settings
 function loadSettings() {
-    // Settings are now loaded from user profile
-    // Keep localStorage as fallback for custom plants
-    const saved = localStorage.getItem('moistureMonitorSettings');
-    if (saved) {
-        const localSettings = JSON.parse(saved);
-        if (localSettings.customPlants && localSettings.customPlants.length > 0) {
-            settings.customPlants = localSettings.customPlants;
-            PLANTS_DATABASE.push(...settings.customPlants);
-        }
-    }
-    
+    // Settings are loaded from user profile in loadUserProfile()
+    // Just update UI elements here
     const themeToggle = document.getElementById('themeToggle');
     const notifToggle = document.getElementById('notificationsEnabled');
     
     if (themeToggle) themeToggle.value = settings.theme;
     if (notifToggle) notifToggle.checked = settings.notificationsEnabled;
     
-    if (settings.selectedPlant) displaySelectedPlant(settings.selectedPlant);
+    // Display selected plant if exists
+    if (settings.selectedPlant) {
+        displaySelectedPlant(settings.selectedPlant);
+    }
 }
 
 async function saveSettings() {
-    // Save to localStorage as backup
-    localStorage.setItem('moistureMonitorSettings', JSON.stringify(settings));
-    
     // Save to Supabase profile
     await saveUserProfile();
 }
@@ -343,6 +374,12 @@ function openMenu() {
 
 function closeMenu() {
     document.getElementById('menuOverlay').classList.remove('active');
+}
+
+function handleMenuOverlayClick(event) {
+    if (event.target.id === 'menuOverlay') {
+        closeMenu();
+    }
 }
 
 // Plants
